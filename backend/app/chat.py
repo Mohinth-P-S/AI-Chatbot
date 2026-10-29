@@ -42,6 +42,7 @@ def find_relevant_knowledge(query: str, kb: Dict[str, List[Dict[str, Any]]]) -> 
            s["id"] in q_lower or \
            ("pudhumai" in q_lower and "pudhumai" in s["id"]) or \
            ("pudhalvan" in q_lower and "pudhalvan" in s["id"]) or \
+           (any(w in q_lower for w in ["girl", "female", "women", "பெண்", "மாணவி", "மகளிர்", "लड़की", "महिला"]) and (s["eligibility_rules"].get("gender") == "female" or "pudhumai" in s["id"] or "pragati" in s["id"])) or \
            ("sc" in q_lower and "sc" in s["id"]) or \
            ("st" in q_lower and "st" in s["id"]) or \
            ("obc" in q_lower and "obc" in s["id"]) or \
