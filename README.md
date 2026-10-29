@@ -6,6 +6,7 @@
 [![React: 18](https://img.shields.io/badge/React-18-61DAFB.svg)](https://react.dev/)
 [![Gemini: 3.8 Flash](https://img.shields.io/badge/Google%20Gemini-3.8%20Flash-orange.svg)](https://ai.google.dev/)
 [![WCAG: AAA Compliance](https://img.shields.io/badge/Accessibility-WCAG%20AAA-brightgreen.svg)](https://www.w3.org/WAI/standards-guidelines/wcag/)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Mohinth-P-S/AI-Chatbot)
 
 > **Jan Sahayak** is a voice-first, multilingual AI assistant built to bridge India's digital and literacy divide. It helps rural citizens, senior citizens, first-generation students, and visually impaired individuals discover and navigate government scholarships, social welfare pensions, and citizen revenue certificates in **Tamil (`ta-IN`)**, **Hindi (`hi-IN`)**, and **English (`en-IN`)**.
 
