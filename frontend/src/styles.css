@@ -1230,3 +1230,164 @@ body.a11y-mode .masked-id-banner {
   margin-top: 12px;
   flex-wrap: wrap;
 }
+
+
+/* ==========================================================================
+   Phase 8 Styles: Helpline & Human Fallback, Kiosk Demo Mode
+   ========================================================================== */
+
+.helpline-screen-container {
+  padding: 20px 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.helpline-box {
+  background: var(--bg-surface);
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.helpline-box h3 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin-bottom: 14px;
+}
+
+.quick-numbers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.quick-num-card {
+  background: var(--bg-primary);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.quick-num-card.primary-num {
+  border-color: #2563EB;
+  background: #EFF6FF;
+}
+
+body.a11y-mode .quick-num-card.primary-num {
+  background: #1E293B;
+  border-color: #FFFF00;
+}
+
+.num-icon {
+  font-size: 1.8rem;
+}
+
+.num-dial {
+  display: block;
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: #2563EB;
+  text-decoration: none;
+  margin-top: 4px;
+}
+
+body.a11y-mode .num-dial {
+  color: #FFFF00;
+}
+
+.phone-link {
+  font-weight: 800;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+body.a11y-mode .phone-link {
+  color: #FFFF00;
+}
+
+/* Kiosk Top Bar */
+.kiosk-top-bar {
+  background: #DC2626;
+  color: #FFFFFF;
+  padding: 10px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  position: sticky;
+  top: 0;
+  z-index: 10000;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+
+body.a11y-mode .kiosk-top-bar {
+  background: #000000;
+  color: #FFFF00;
+  border-bottom: 3px solid #FFFF00;
+}
+
+.kiosk-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.kiosk-badge {
+  background: #FFFFFF;
+  color: #DC2626;
+  font-weight: 900;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  letter-spacing: 0.5px;
+}
+
+body.a11y-mode .kiosk-badge {
+  background: #FFFF00;
+  color: #000000;
+}
+
+.kiosk-timer {
+  font-weight: 800;
+  font-size: 1rem;
+}
+
+.kiosk-timer.urgent {
+  animation: pulseTimer 0.8s infinite;
+  color: #FEF08A;
+}
+
+@keyframes pulseTimer {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+.kiosk-reset-btn {
+  background: #FFFFFF;
+  color: #B91C1C;
+  border: 2px solid #FFFFFF;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  cursor: pointer;
+  min-height: 40px;
+}
+
+.kiosk-reset-btn:hover {
+  background: #FEF2F2;
+}
+
+body.a11y-mode .kiosk-reset-btn {
+  background: #FFFF00;
+  color: #000000;
+  border-color: #FFFF00;
+}

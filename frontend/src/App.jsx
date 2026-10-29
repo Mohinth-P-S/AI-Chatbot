@@ -6,6 +6,8 @@ import ChatScreen from './components/ChatScreen'
 import ScholarshipFinder from './components/ScholarshipFinder'
 import ServicesGuide from './components/ServicesGuide'
 import ScanScreen from './components/ScanScreen'
+import HelplineScreen from './components/HelplineScreen'
+import KioskBar from './components/KioskBar'
 import VoiceNotice from './components/VoiceNotice'
 import Footer from './components/Footer'
 import {
@@ -40,6 +42,10 @@ export default function App() {
   const [sessionProfile, setSessionProfile] = useState({})
   const [isLoading, setIsLoading] = useState(false)
 
+  // Kiosk Mode States
+  const [isKioskMode, setIsKioskMode] = useState(false)
+  const [kioskCountdown, setKioskCountdown] = useState(60)
+
   // Voice States
   const [isListening, setIsListening] = useState(false)
   const [interimTranscript, setInterimTranscript] = useState('')
@@ -71,9 +77,62 @@ export default function App() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     if (params.get('kiosk') === '1') {
+      setIsKioskMode(true)
       document.body.classList.add('kiosk-mode')
     }
   }, [])
+
+  // Complete session reset for Kiosk privacy
+  const resetKioskSession = (speakNotice = true) => {
+    stopSpeaking()
+    setSessionProfile({})
+    const langObj = LANGUAGES.find((l) => l.code === currentLang) || LANGUAGES[0]
+    setMessages([
+      {
+        sender: 'assistant',
+        text: langObj.greeting,
+        timestamp: new Date().toISOString(),
+        sources: []
+      }
+    ])
+    setScreen('welcome')
+    setKioskCountdown(60)
+    if (speakNotice) {
+      const notice = currentLang === 'ta'
+        ? 'கியோஸ்க் அமர்வு மீட்டமைக்கப்பட்டது. ஜன சஹாயக்கிற்கு வருக.'
+        : (currentLang === 'hi'
+          ? 'कियोस्क सत्र रीसेट हो गया है। जन सहायक में आपका स्वागत है।'
+          : 'Kiosk session reset. Welcome to Jan Sahayak.')
+      handleSpeak(notice)
+    }
+  }
+
+  // 60-second inactivity auto-reset in Kiosk Mode
+  useEffect(() => {
+    if (!isKioskMode) return
+
+    const resetTimer = () => {
+      setKioskCountdown(60)
+    }
+
+    const events = ['pointerdown', 'keydown', 'touchstart', 'scroll']
+    events.forEach((ev) => window.addEventListener(ev, resetTimer, { passive: true }))
+
+    const interval = setInterval(() => {
+      setKioskCountdown((prev) => {
+        if (prev <= 1) {
+          resetKioskSession(true)
+          return 60
+        }
+        return prev - 1
+      })
+    }, 1000)
+
+    return () => {
+      clearInterval(interval)
+      events.forEach((ev) => window.removeEventListener(ev, resetTimer))
+    }
+  }, [isKioskMode, currentLang])
 
   // Listen for voice loading in browser
   useEffect(() => {
@@ -265,6 +324,11 @@ export default function App() {
       return
     }
 
+    if (action === 'helpline') {
+      setScreen('helpline')
+      return
+    }
+
     const quickQueries = {
       scan: {
         ta: 'எனது ஆவணத்தை ஸ்கேன் செய்து விவரங்களை சரிபார்க்க விரும்புகிறேன்.',
@@ -339,6 +403,14 @@ export default function App() {
 
   return (
     <div className="app-container">
+      {isKioskMode && (
+        <KioskBar
+          countdown={kioskCountdown}
+          onManualReset={() => resetKioskSession(true)}
+          currentLang={currentLang}
+        />
+      )}
+
       <Header
         currentLang={currentLang}
         onChangeLanguage={handleLanguageChange}
@@ -405,6 +477,14 @@ export default function App() {
           onProfileUpdated={(updates) => {
             setSessionProfile((prev) => ({ ...prev, ...updates }))
           }}
+          onReadAloud={(txt) => handleSpeak(txt)}
+        />
+      )}
+
+      {screen === 'helpline' && (
+        <HelplineScreen
+          currentLang={currentLang}
+          onBackToChat={() => setScreen('chat')}
           onReadAloud={(txt) => handleSpeak(txt)}
         />
       )}
