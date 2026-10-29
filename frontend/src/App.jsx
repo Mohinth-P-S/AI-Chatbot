@@ -1,9 +1,17 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { LANGUAGES, TRANSLATIONS } from './i18n'
 import Header from './components/Header'
 import WelcomeScreen from './components/WelcomeScreen'
 import ChatScreen from './components/ChatScreen'
+import VoiceNotice from './components/VoiceNotice'
 import Footer from './components/Footer'
+import {
+  speakText,
+  stopSpeaking,
+  checkVoiceAvailability,
+  createSpeechRecognizer,
+  getAvailableVoices
+} from './utils/speech'
 
 export default function App() {
   const [currentLang, setCurrentLang] = useState(() => {
@@ -25,7 +33,14 @@ export default function App() {
   const [messages, setMessages] = useState([])
   const [sessionProfile, setSessionProfile] = useState({})
   const [isLoading, setIsLoading] = useState(false)
+
+  // Voice States
   const [isListening, setIsListening] = useState(false)
+  const [interimTranscript, setInterimTranscript] = useState('')
+  const [currentlySpeakingIndex, setCurrentlySpeakingIndex] = useState(null)
+  const [voiceNotice, setVoiceNotice] = useState(null)
+
+  const activeRecognizerRef = useRef(null)
 
   const t = TRANSLATIONS[currentLang] || TRANSLATIONS.ta
 
@@ -43,6 +58,7 @@ export default function App() {
   useEffect(() => {
     document.documentElement.lang = currentLang
     localStorage.setItem('js_lang', currentLang)
+    checkLanguageVoice(currentLang)
   }, [currentLang])
 
   // Detect Kiosk mode (?kiosk=1)
@@ -52,6 +68,16 @@ export default function App() {
       document.body.classList.add('kiosk-mode')
     }
   }, [])
+
+  // Listen for voice loading in browser
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.onvoiceschanged = () => {
+        getAvailableVoices()
+        checkLanguageVoice(currentLang)
+      }
+    }
+  }, [currentLang])
 
   // Initialize welcome message when entering chat
   useEffect(() => {
@@ -68,16 +94,43 @@ export default function App() {
     }
   }, [currentLang])
 
-  // Simple Speech Synthesis helper
-  const speakText = (text, langCode = null) => {
-    if (!audioEnabled || !('speechSynthesis' in window)) return
-    window.speechSynthesis.cancel()
+  // Check if device supports speech synthesis voice for this language
+  const checkLanguageVoice = (langCode) => {
+    const res = checkVoiceAvailability(langCode)
+    if (!res.available && !res.pending) {
+      const langNames = { ta: 'Tamil', hi: 'Hindi', en: 'English' }
+      setVoiceNotice({
+        type: 'info',
+        title: `${langNames[langCode] || langCode} voice not found on device`,
+        message: `Your browser has no installed ${langNames[langCode]} speech voice. Text is displayed normally, and you can add voices in Windows Speech Settings.`
+      })
+    } else if (res.available) {
+      // Clear missing voice notice if now available
+      setVoiceNotice((prev) => (prev?.title?.includes('voice not found') ? null : prev))
+    }
+  }
 
-    const utterance = new SpeechSynthesisUtterance(text)
-    const targetLang = langCode || (LANGUAGES.find((l) => l.code === currentLang)?.speechCode || 'ta-IN')
-    utterance.lang = targetLang
-    utterance.rate = 0.95
-    window.speechSynthesis.speak(utterance)
+  // Speak helper
+  const handleSpeak = (text, index = null) => {
+    if (!audioEnabled && !accessibilityMode) return
+    stopSpeaking()
+
+    setCurrentlySpeakingIndex(index)
+    speakText({
+      text,
+      langCode: currentLang,
+      onStart: () => setCurrentlySpeakingIndex(index),
+      onEnd: () => setCurrentlySpeakingIndex(null),
+      onError: (err) => {
+        console.warn('Speech error:', err)
+        setCurrentlySpeakingIndex(null)
+      }
+    })
+  }
+
+  const handleStopSpeaking = () => {
+    stopSpeaking()
+    setCurrentlySpeakingIndex(null)
   }
 
   const handleToggleAccessibility = () => {
@@ -88,8 +141,8 @@ export default function App() {
     setAudioEnabled((prev) => {
       const next = !prev
       localStorage.setItem('js_audio', next)
-      if (!next && 'speechSynthesis' in window) {
-        window.speechSynthesis.cancel()
+      if (!next) {
+        handleStopSpeaking()
       }
       return next
     })
@@ -97,9 +150,10 @@ export default function App() {
 
   const handleLanguageChange = (newLang) => {
     setCurrentLang(newLang)
+    handleStopSpeaking()
     const langObj = LANGUAGES.find((l) => l.code === newLang)
-    if (langObj) {
-      speakText(langObj.greeting, langObj.speechCode)
+    if (langObj && (audioEnabled || accessibilityMode)) {
+      handleSpeak(langObj.greeting)
     }
   }
 
@@ -107,16 +161,20 @@ export default function App() {
     setScreen('chat')
     localStorage.setItem('js_screen', 'chat')
     const langObj = LANGUAGES.find((l) => l.code === currentLang) || LANGUAGES[0]
-    speakText(langObj.greeting, langObj.speechCode)
+    if (audioEnabled || accessibilityMode) {
+      handleSpeak(langObj.greeting, 0)
+    }
   }
 
   const handleResetWelcome = () => {
+    handleStopSpeaking()
     setScreen('welcome')
     localStorage.setItem('js_screen', 'welcome')
   }
 
   const handleSendMessage = async (text) => {
     if (!text.trim()) return
+    handleStopSpeaking()
 
     const userMsg = {
       sender: 'user',
@@ -151,13 +209,18 @@ export default function App() {
         timestamp: new Date().toISOString()
       }
 
-      setMessages((prev) => [...prev, assistantMsg])
+      setMessages((prev) => {
+        const updated = [...prev, assistantMsg]
+        // Auto read aloud for new assistant message
+        if (audioEnabled || accessibilityMode) {
+          handleSpeak(data.reply, updated.length - 1)
+        }
+        return updated
+      })
+
       if (data.updated_profile) {
         setSessionProfile((prev) => ({ ...prev, ...data.updated_profile }))
       }
-
-      // Auto read aloud if voice is enabled
-      speakText(data.reply)
 
     } catch (err) {
       console.error('Chat API Error:', err)
@@ -207,40 +270,56 @@ export default function App() {
     }
   }
 
+  // Toggle Microphone with Speech-to-Text
   const handleToggleMic = () => {
-    // Basic Web Speech Recognition stub (extended fully in Phase 5)
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
-    if (!SpeechRecognition) {
-      alert('Your browser does not support voice input. Please use Google Chrome or type your message.')
-      return
-    }
-
     if (isListening) {
+      activeRecognizerRef.current?.stop()
       setIsListening(false)
+      setInterimTranscript('')
       return
     }
 
-    try {
-      const recognition = new SpeechRecognition()
-      const langObj = LANGUAGES.find((l) => l.code === currentLang)
-      recognition.lang = langObj ? langObj.speechCode : 'ta-IN'
-      recognition.interimResults = false
+    handleStopSpeaking()
 
-      recognition.onstart = () => setIsListening(true)
-      recognition.onend = () => setIsListening(false)
-      recognition.onerror = () => setIsListening(false)
-
-      recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript
-        if (transcript) {
-          handleSendMessage(transcript)
+    const recognizer = createSpeechRecognizer({
+      langCode: currentLang,
+      onStart: () => {
+        setIsListening(true)
+        setInterimTranscript('')
+      },
+      onInterim: (text) => {
+        setInterimTranscript(text)
+      },
+      onFinal: (text) => {
+        setIsListening(false)
+        setInterimTranscript('')
+        if (text) {
+          handleSendMessage(text)
         }
+      },
+      onError: (err) => {
+        setIsListening(false)
+        setInterimTranscript('')
+        setVoiceNotice({
+          type: 'error',
+          title: 'Microphone Notice',
+          message: err.message
+        })
+      },
+      onEnd: () => {
+        setIsListening(false)
+        setInterimTranscript('')
       }
+    })
 
-      recognition.start()
-    } catch (e) {
-      console.warn('SpeechRecognition error:', e)
-      setIsListening(false)
+    if (recognizer) {
+      activeRecognizerRef.current = recognizer
+      try {
+        recognizer.start()
+      } catch (e) {
+        console.warn('Recognition start error:', e)
+        setIsListening(false)
+      }
     }
   }
 
@@ -256,12 +335,18 @@ export default function App() {
         onResetWelcome={handleResetWelcome}
       />
 
+      {/* Voice Warning or Diagnostic Notice */}
+      <VoiceNotice
+        notice={voiceNotice}
+        onDismiss={() => setVoiceNotice(null)}
+      />
+
       {screen === 'welcome' ? (
         <WelcomeScreen
           selectedLang={currentLang}
           onSelectLanguage={setCurrentLang}
           onContinue={handleContinueFromWelcome}
-          onSpeakGreeting={speakText}
+          onSpeakGreeting={(txt, code) => handleSpeak(txt)}
         />
       ) : (
         <ChatScreen
@@ -269,8 +354,11 @@ export default function App() {
           messages={messages}
           onSendMessage={handleSendMessage}
           onQuickAction={handleQuickAction}
-          onReadAloud={(txt) => speakText(txt)}
+          onReadAloud={(txt, idx) => handleSpeak(txt, idx)}
+          onStopSpeaking={handleStopSpeaking}
+          currentlySpeakingIndex={currentlySpeakingIndex}
           isListening={isListening}
+          interimTranscript={interimTranscript}
           onToggleMic={handleToggleMic}
           isLoading={isLoading}
         />

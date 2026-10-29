@@ -1,6 +1,6 @@
 /* ==========================================================================
    Jan Sahayak (மக்கள் உதவியாளர்) - Unified CSS Stylesheet
-   Supports: Light Mode, Dark/High-Contrast Accessibility Mode, Kiosk Mode
+   Supports: Light Mode, Dark/High-Contrast Accessibility Mode, Kiosk Mode, Voice Waveforms
    ========================================================================== */
 
 :root {
@@ -171,6 +171,54 @@ body.a11y-mode .ctrl-btn.active {
   background: #FFFF00;
   color: #000000;
   font-weight: 900;
+}
+
+/* Voice Notice Banner */
+.voice-notice-banner {
+  background: #EFF6FF;
+  border-bottom: 2px solid #3B82F6;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  animation: slideDown 0.3s ease-out;
+}
+
+body.a11y-mode .voice-notice-banner {
+  background: #1E293B;
+  border-bottom: 3px solid #FFFF00;
+  color: #FFFF00;
+}
+
+.voice-notice-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.92rem;
+}
+
+.voice-notice-icon {
+  font-size: 1.4rem;
+}
+
+.voice-notice-text strong {
+  display: block;
+}
+
+.voice-notice-close {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  color: inherit;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Welcome Screen */
@@ -345,6 +393,7 @@ body.a11y-mode .action-pill {
   border-radius: 16px;
   line-height: 1.5;
   border: 1px solid var(--border);
+  position: relative;
 }
 
 .msg-row.user .bubble {
@@ -359,6 +408,16 @@ body.a11y-mode .action-pill {
 
 body.a11y-mode .bubble {
   border-width: 2px;
+}
+
+.bubble.is-speaking {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-light);
+}
+
+body.a11y-mode .bubble.is-speaking {
+  border-color: #00FFFF;
+  box-shadow: 0 0 0 3px #00FFFF;
 }
 
 .bubble-footer {
@@ -387,6 +446,12 @@ body.a11y-mode .bubble {
   color: var(--text-primary);
 }
 
+.read-btn.speaking {
+  background: #DC2626;
+  color: #FFF;
+  border-color: #DC2626;
+}
+
 /* Sources List in Chat */
 .sources-box {
   margin-top: 10px;
@@ -409,6 +474,26 @@ body.a11y-mode .sources-box a {
   color: #00FFFF;
 }
 
+/* Interim Transcript Bubble */
+.interim-bubble {
+  align-self: flex-end;
+  background: #F0FDF4;
+  border: 2px dashed #16A34A;
+  color: #15803D;
+  padding: 10px 16px;
+  border-radius: 16px;
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+body.a11y-mode .interim-bubble {
+  background: #064E3B;
+  border-color: #34D399;
+  color: #FFFFFF;
+}
+
 /* Chat Input Bar */
 .chat-input-bar {
   padding: 14px 16px;
@@ -424,9 +509,9 @@ body.a11y-mode .sources-box a {
   color: #FFFFFF;
   border: none;
   border-radius: 50%;
-  width: 52px;
-  height: 52px;
-  min-width: 52px;
+  width: 54px;
+  height: 54px;
+  min-width: 54px;
   font-size: 1.5rem;
   cursor: pointer;
   display: flex;
@@ -437,13 +522,13 @@ body.a11y-mode .sources-box a {
 
 .mic-btn.listening {
   background: #DC2626;
-  animation: pulse 1.2s infinite;
+  animation: pulseMic 1.2s infinite;
 }
 
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.08); }
-  100% { transform: scale(1); }
+@keyframes pulseMic {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); }
+  50% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
 }
 
 .chat-input {

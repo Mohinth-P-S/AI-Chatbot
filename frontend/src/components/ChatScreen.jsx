@@ -7,7 +7,10 @@ export default function ChatScreen({
   onSendMessage,
   onQuickAction,
   onReadAloud,
+  onStopSpeaking,
+  currentlySpeakingIndex,
   isListening,
+  interimTranscript,
   onToggleMic,
   isLoading
 }) {
@@ -21,7 +24,7 @@ export default function ChatScreen({
 
   useEffect(() => {
     scrollToBottom()
-  }, [messages, isLoading])
+  }, [messages, isLoading, interimTranscript])
 
   const handleSubmit = (e) => {
     e?.preventDefault()
@@ -73,54 +76,78 @@ export default function ChatScreen({
 
       {/* Messages Scroll Area */}
       <main id="main-content" className="messages-area" role="log" aria-live="polite">
-        {messages.map((msg, idx) => (
-          <article
-            key={idx}
-            className={`msg-row ${msg.sender === 'user' ? 'user' : 'assistant'}`}
-            aria-label={`${msg.sender === 'user' ? 'You' : 'Jan Sahayak'}`}
-          >
-            <div className="bubble">
-              <p>{msg.text}</p>
+        {messages.map((msg, idx) => {
+          const isSpeakingThis = currentlySpeakingIndex === idx
 
-              {/* Citations / Sources if provided */}
-              {msg.sources && msg.sources.length > 0 && (
-                <div className="sources-box">
-                  <strong>{t.sourcesHeading}</strong>
-                  {msg.sources.map((src, sIdx) => (
-                    <div key={sIdx}>
-                      <a href={src.url} target="_blank" rel="noopener noreferrer">
-                        🔗 {src.name}
-                      </a>
-                      <small style={{ color: 'var(--text-secondary)' }}>
-                        {t.verifiedDate} {src.last_verified}
-                      </small>
-                    </div>
-                  ))}
-                </div>
-              )}
+          return (
+            <article
+              key={idx}
+              className={`msg-row ${msg.sender === 'user' ? 'user' : 'assistant'}`}
+              aria-label={`${msg.sender === 'user' ? 'You' : 'Jan Sahayak'}`}
+            >
+              <div className={`bubble ${isSpeakingThis ? 'is-speaking' : ''}`}>
+                <p>{msg.text}</p>
 
-              {/* Assistant Message Controls */}
-              {msg.sender === 'assistant' && (
-                <div className="bubble-footer">
-                  <button
-                    type="button"
-                    className="read-btn"
-                    onClick={() => onReadAloud(msg.text)}
-                    aria-label={`${t.readAloud}: ${msg.text.substring(0, 40)}`}
-                  >
-                    <span>🔊</span>
-                    <span>{t.readAloud}</span>
-                  </button>
-                </div>
-              )}
-            </div>
-          </article>
-        ))}
+                {/* Citations / Sources if provided */}
+                {msg.sources && msg.sources.length > 0 && (
+                  <div className="sources-box">
+                    <strong>{t.sourcesHeading}</strong>
+                    {msg.sources.map((src, sIdx) => (
+                      <div key={sIdx}>
+                        <a href={src.url} target="_blank" rel="noopener noreferrer">
+                          🔗 {src.name}
+                        </a>
+                        <small style={{ color: 'var(--text-secondary)' }}>
+                          {t.verifiedDate} {src.last_verified}
+                        </small>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Assistant Message Controls */}
+                {msg.sender === 'assistant' && (
+                  <div className="bubble-footer">
+                    {isSpeakingThis ? (
+                      <button
+                        type="button"
+                        className="read-btn speaking"
+                        onClick={onStopSpeaking}
+                        aria-label={t.stopAudio}
+                      >
+                        <span>⏹</span>
+                        <span>{t.stopAudio}</span>
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="read-btn"
+                        onClick={() => onReadAloud(msg.text, idx)}
+                        aria-label={`${t.readAloud}: ${msg.text.substring(0, 40)}`}
+                      >
+                        <span>🔊</span>
+                        <span>{t.readAloud}</span>
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            </article>
+          )
+        })}
+
+        {/* Live Interim Speech Bubble */}
+        {isListening && interimTranscript && (
+          <div className="interim-bubble" aria-live="polite">
+            <span aria-hidden="true">🎙️</span>
+            <span>"{interimTranscript}..."</span>
+          </div>
+        )}
 
         {isLoading && (
           <div className="msg-row assistant">
             <div className="bubble" style={{ fontStyle: 'italic', color: 'var(--text-secondary)' }}>
-              <span>⌛ ஜன சஹாயக் பதிலளிக்கிறது... (Processing...)</span>
+              <span>⌛ {currentLang === 'ta' ? 'ஜன சஹாயக் பதிலளிக்கிறது...' : (currentLang === 'hi' ? 'जन सहायक उत्तर दे रहा है...' : 'Jan Sahayak is thinking...')}</span>
             </div>
           </div>
         )}
