@@ -59,7 +59,8 @@ export default function ServicesGuide({
   useEffect(() => {
     async function fetchServices() {
       try {
-        const res = await fetch('/api/services')
+        const apiBase = import.meta.env.VITE_API_BASE_URL || ''
+        const res = await fetch(`${apiBase}/api/services`)
         if (res.ok) {
           const data = await res.json()
           setServicesData({

@@ -146,7 +146,8 @@ export default function ScanScreen({
     formData.append('document_type', docTypeHint)
 
     try {
-      const res = await fetch('/api/scan', {
+      const apiBase = import.meta.env.VITE_API_BASE_URL || ''
+      const res = await fetch(`${apiBase}/api/scan`, {
         method: 'POST',
         body: formData
       })
@@ -187,7 +188,8 @@ export default function ScanScreen({
     formData.append('document_type', type)
 
     try {
-      const res = await fetch('/api/scan', {
+      const apiBase = import.meta.env.VITE_API_BASE_URL || ''
+      const res = await fetch(`${apiBase}/api/scan`, {
         method: 'POST',
         body: formData
       })

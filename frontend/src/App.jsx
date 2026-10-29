@@ -249,8 +249,24 @@ export default function App() {
     setMessages((prev) => [...prev, userMsg])
     setIsLoading(true)
 
+    // Cold start notification timer for free tier hosting (Render sleeps after 15 min idle)
+    const coldStartTimer = setTimeout(() => {
+      const coldStartNotice = currentLang === 'ta'
+        ? 'இலவச மேகக்கணி சேவையகம் (Cloud Server) விழித்தெழுகிறது (சுமார் 30 வினாடிகள் ஆகலாம்). தயவுசெய்து காத்திருக்கவும்...'
+        : (currentLang === 'hi'
+          ? 'मुफ्त क्लाउड सर्वर चालू हो रहा है (पहली बार में 30-40 सेकंड लग सकते हैं)। कृपया प्रतीक्षा करें...'
+          : 'Cloud server is waking up from idle sleep (first request may take 30-40 seconds). Thank you for your patience...')
+
+      setVoiceNotice({
+        type: 'info',
+        title: 'Cloud Server Waking Up',
+        message: coldStartNotice
+      })
+    }, 3500)
+
     try {
-      const response = await fetch('/api/chat', {
+      const apiBase = import.meta.env.VITE_API_BASE_URL || ''
+      const response = await fetch(`${apiBase}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -259,6 +275,9 @@ export default function App() {
           profile: sessionProfile
         })
       })
+
+      clearTimeout(coldStartTimer)
+      setVoiceNotice((prev) => (prev?.title === 'Cloud Server Waking Up' ? null : prev))
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)

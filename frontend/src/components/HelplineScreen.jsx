@@ -55,7 +55,8 @@ export default function HelplineScreen({
   useEffect(() => {
     async function loadHelpline() {
       try {
-        const res = await fetch('/api/helpline')
+        const apiBase = import.meta.env.VITE_API_BASE_URL || ''
+        const res = await fetch(`${apiBase}/api/helpline`)
         if (res.ok) {
           const data = await res.json()
           setHelplineData(data)

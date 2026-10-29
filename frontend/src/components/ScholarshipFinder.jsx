@@ -219,7 +219,8 @@ export default function ScholarshipFinder({
         studied_in_govt_school: answers.studied_in_govt_school
       }
 
-      const res = await fetch('/api/eligibility', {
+      const apiBase = import.meta.env.VITE_API_BASE_URL || ''
+      const res = await fetch(`${apiBase}/api/eligibility`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
