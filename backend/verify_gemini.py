@@ -12,7 +12,7 @@ env_path = Path(__file__).resolve().parent / ".env"
 load_dotenv(dotenv_path=env_path)
 
 api_key = os.getenv("GEMINI_API_KEY", "").strip()
-model_name = os.getenv("GEMINI_MODEL", "gemini-2.5-flash").strip()
+model_name = os.getenv("GEMINI_MODEL", "gemini-3.8-flash").strip()
 
 def verify_connection():
     if not api_key or api_key == "your_gemini_api_key_here":

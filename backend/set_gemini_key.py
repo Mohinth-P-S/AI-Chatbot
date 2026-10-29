@@ -36,7 +36,7 @@ def setup_key():
     elif env_path.exists():
         content = env_path.read_text(encoding="utf-8")
     else:
-        content = "GEMINI_API_KEY=\nGEMINI_MODEL=gemini-2.5-flash\nALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173\nPORT=8005\n"
+        content = "GEMINI_API_KEY=\nGEMINI_MODEL=gemini-3.8-flash\nALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173\nPORT=8005\n"
 
     # Replace GEMINI_API_KEY line
     if "GEMINI_API_KEY=" in content:

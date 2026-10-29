@@ -108,7 +108,7 @@ def generate_grounded_reply(req: ChatRequest) -> ChatResponse:
     kb = load_knowledge_base()
     relevant_items = find_relevant_knowledge(req.message, kb)
     api_key = os.getenv("GEMINI_API_KEY", "").strip()
-    model_name = os.getenv("GEMINI_MODEL", "gemini-2.5-flash").strip()
+    model_name = os.getenv("GEMINI_MODEL", "gemini-3.8-flash").strip()
 
     # If Gemini API key is configured and not the default placeholder
     if api_key and api_key != "your_gemini_api_key_here":
