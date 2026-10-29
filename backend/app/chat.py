@@ -115,9 +115,12 @@ def generate_grounded_reply(req: ChatRequest) -> ChatResponse:
     if api_key and api_key != "your_gemini_api_key_here":
         try:
             from google import genai
-            from google.genai.types import GenerateContentConfig
+            from google.genai import types
 
-            client = genai.Client(api_key=api_key)
+            client = genai.Client(
+                api_key=api_key,
+                http_options=types.HttpOptions(timeout=15000)
+            )
             prompt = build_gemini_prompt(req.message, req.language, relevant_items, req.profile or {})
 
             response = client.models.generate_content(

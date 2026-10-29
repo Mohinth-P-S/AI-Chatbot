@@ -5,7 +5,7 @@ from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, Any, List, Optional
-from fastapi import FastAPI, HTTPException, Request, status
+from fastapi import FastAPI, HTTPException, Request, status, File, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
@@ -16,6 +16,7 @@ from app.eligibility import (
     DATA_DIR
 )
 from app.chat import ChatRequest, ChatResponse, generate_grounded_reply
+from app.scanner import ScanResponse, extract_document_data
 
 # Load environment variables from backend/.env if present
 env_path = Path(__file__).resolve().parent.parent / ".env"
@@ -128,6 +129,46 @@ def chat(request: ChatRequest):
     Returns reply, updated citizen profile, suggested actions, and source citations.
     """
     return generate_grounded_reply(request)
+
+@app.post("/api/scan", response_model=ScanResponse, summary="Scan Document Image")
+async def scan_document(
+    file: UploadFile = File(..., description="Uploaded document image (JPEG, PNG, WebP)"),
+    document_type: str = Form("general", description="Hint for document type")
+):
+    """
+    In-memory document scanning via Gemini Vision OCR.
+    Enforces privacy by masking ID numbers (last 4 digits only)
+    and discarding image bytes immediately from memory.
+    """
+    allowed_types = ["image/jpeg", "image/png", "image/webp", "image/jpg"]
+    if file.content_type not in allowed_types:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Unsupported file format '{file.content_type}'. Please upload a JPEG, PNG, or WebP image."
+        )
+
+    # Read image content in-memory (max 5 MB)
+    image_bytes = await file.read()
+    if len(image_bytes) > 5 * 1024 * 1024:
+        raise HTTPException(
+            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            detail="File size exceeds the 5 MB limit. Please compress or resize the image."
+        )
+
+    if len(image_bytes) == 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Uploaded file is empty."
+        )
+
+    # Process in memory
+    result = extract_document_data(
+        image_bytes=image_bytes,
+        mime_type=file.content_type,
+        doc_type_hint=document_type
+    )
+
+    return result
 
 if __name__ == "__main__":
     import uvicorn

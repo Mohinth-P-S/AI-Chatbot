@@ -5,6 +5,7 @@ import WelcomeScreen from './components/WelcomeScreen'
 import ChatScreen from './components/ChatScreen'
 import ScholarshipFinder from './components/ScholarshipFinder'
 import ServicesGuide from './components/ServicesGuide'
+import ScanScreen from './components/ScanScreen'
 import VoiceNotice from './components/VoiceNotice'
 import Footer from './components/Footer'
 import {
@@ -259,6 +260,11 @@ export default function App() {
       return
     }
 
+    if (action === 'scan') {
+      setScreen('scan')
+      return
+    }
+
     const quickQueries = {
       scan: {
         ta: 'எனது ஆவணத்தை ஸ்கேன் செய்து விவரங்களை சரிபார்க்க விரும்புகிறேன்.',
@@ -388,6 +394,17 @@ export default function App() {
           defaultTab={servicesDefaultTab}
           currentLang={currentLang}
           onBackToChat={() => setScreen('chat')}
+          onReadAloud={(txt) => handleSpeak(txt)}
+        />
+      )}
+
+      {screen === 'scan' && (
+        <ScanScreen
+          currentLang={currentLang}
+          onBackToChat={() => setScreen('chat')}
+          onProfileUpdated={(updates) => {
+            setSessionProfile((prev) => ({ ...prev, ...updates }))
+          }}
           onReadAloud={(txt) => handleSpeak(txt)}
         />
       )}

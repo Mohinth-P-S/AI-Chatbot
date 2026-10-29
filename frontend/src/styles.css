@@ -1020,3 +1020,213 @@ body.a11y-mode .success-banner {
   border-top: 1px solid var(--border);
   padding-top: 14px;
 }
+
+
+/* ==========================================================================
+   Phase 7 Styles: Document Scanner, Privacy Guard & Confirmation Form
+   ========================================================================== */
+
+.scan-screen-container {
+  padding: 20px 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.consent-card {
+  background: var(--bg-surface);
+  border: 3px solid var(--border);
+  border-radius: 16px;
+  padding: 30px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 20px;
+  max-width: 650px;
+  margin: 20px auto;
+  box-shadow: var(--shadow-sm);
+}
+
+.consent-icon {
+  font-size: 3rem;
+}
+
+.consent-list {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--bg-primary);
+  padding: 20px;
+  border-radius: 12px;
+  list-style: none;
+}
+
+.consent-list li {
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+
+.consent-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.consent-checkbox-label input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+}
+
+/* Scanner Upload Card */
+.scanner-upload-card {
+  background: var(--bg-surface);
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 650px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.file-drop-area {
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  padding: 30px 20px;
+  text-align: center;
+  background: var(--bg-primary);
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.file-drop-area:hover {
+  border-color: var(--primary);
+}
+
+.file-input-hidden {
+  display: none;
+}
+
+.file-drop-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.upload-icon {
+  font-size: 2.5rem;
+}
+
+.image-preview-box {
+  max-height: 220px;
+  overflow: hidden;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  display: flex;
+  justify-content: center;
+  background: #000;
+}
+
+.preview-img {
+  max-width: 100%;
+  max-height: 220px;
+  object-fit: contain;
+}
+
+.sample-quick-tests {
+  margin-top: 14px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sample-btn-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Extracted Confirmation Card */
+.extracted-confirm-card {
+  background: var(--bg-surface);
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 650px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.masked-id-banner {
+  background: #EFF6FF;
+  border: 2px solid #3B82F6;
+  color: #1E3A8A;
+  border-radius: 10px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.05rem;
+}
+
+body.a11y-mode .masked-id-banner {
+  background: #064E3B;
+  border-color: #34D399;
+  color: #FFFFFF;
+}
+
+.masked-number {
+  font-family: monospace;
+  font-weight: 900;
+  font-size: 1.15rem;
+}
+
+.confidence-notice {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.edit-fields-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+
+.confirm-actions-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
