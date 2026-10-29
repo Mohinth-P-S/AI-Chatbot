@@ -3,6 +3,8 @@ import { LANGUAGES, TRANSLATIONS } from './i18n'
 import Header from './components/Header'
 import WelcomeScreen from './components/WelcomeScreen'
 import ChatScreen from './components/ChatScreen'
+import ScholarshipFinder from './components/ScholarshipFinder'
+import ServicesGuide from './components/ServicesGuide'
 import VoiceNotice from './components/VoiceNotice'
 import Footer from './components/Footer'
 import {
@@ -18,9 +20,12 @@ export default function App() {
     return localStorage.getItem('js_lang') || 'ta'
   })
 
+  // Screens: 'welcome' | 'chat' | 'scholarship_finder' | 'services_guide'
   const [screen, setScreen] = useState(() => {
     return localStorage.getItem('js_screen') || 'welcome'
   })
+
+  const [servicesDefaultTab, setServicesDefaultTab] = useState('certificates')
 
   const [accessibilityMode, setAccessibilityMode] = useState(() => {
     return localStorage.getItem('js_a11y') === 'true'
@@ -105,7 +110,6 @@ export default function App() {
         message: `Your browser has no installed ${langNames[langCode]} speech voice. Text is displayed normally, and you can add voices in Windows Speech Settings.`
       })
     } else if (res.available) {
-      // Clear missing voice notice if now available
       setVoiceNotice((prev) => (prev?.title?.includes('voice not found') ? null : prev))
     }
   }
@@ -211,7 +215,6 @@ export default function App() {
 
       setMessages((prev) => {
         const updated = [...prev, assistantMsg]
-        // Auto read aloud for new assistant message
         if (audioEnabled || accessibilityMode) {
           handleSpeak(data.reply, updated.length - 1)
         }
@@ -235,23 +238,28 @@ export default function App() {
     }
   }
 
+  // Quick Action Switcher: Routes to dedicated interactive screens
   const handleQuickAction = (action) => {
+    handleStopSpeaking()
+
+    if (action === 'scholarships') {
+      setScreen('scholarship_finder')
+      return
+    }
+
+    if (action === 'certificates') {
+      setServicesDefaultTab('certificates')
+      setScreen('services_guide')
+      return
+    }
+
+    if (action === 'pensions') {
+      setServicesDefaultTab('pensions')
+      setScreen('services_guide')
+      return
+    }
+
     const quickQueries = {
-      scholarships: {
-        ta: 'எனக்கு என்னென்ன அரசு உதவித்தொகைகள் கிடைக்க வாய்ப்புள்ளது?',
-        hi: 'मुझे कौन-सी सरकारी छात्रवृत्तियां मिल सकती हैं?',
-        en: 'What government scholarships am I eligible for?'
-      },
-      certificates: {
-        ta: 'வருமானம் மற்றும் சாதிச் சான்றிதழ் பெற என்னென்ன ஆவணங்கள் தேவை?',
-        hi: 'आय और जाति प्रमाण पत्र के लिए कौन से दस्तावेज चाहिए?',
-        en: 'What documents are required for income and community certificates?'
-      },
-      pensions: {
-        ta: 'முதியோர் மற்றும் மாற்றுத்திறனாளி ஓய்வூதியம் பெறுவது எப்படி?',
-        hi: 'वृद्धावस्था और दिव्यांग पेंशन के क्या नियम हैं?',
-        en: 'How to apply for old age and disability pensions?'
-      },
       scan: {
         ta: 'எனது ஆவணத்தை ஸ்கேன் செய்து விவரங்களை சரிபார்க்க விரும்புகிறேன்.',
         hi: 'मैं अपने दस्तावेज़ को स्कैन करके विवरण जांचना चाहता हूँ।',
@@ -335,20 +343,21 @@ export default function App() {
         onResetWelcome={handleResetWelcome}
       />
 
-      {/* Voice Warning or Diagnostic Notice */}
       <VoiceNotice
         notice={voiceNotice}
         onDismiss={() => setVoiceNotice(null)}
       />
 
-      {screen === 'welcome' ? (
+      {screen === 'welcome' && (
         <WelcomeScreen
           selectedLang={currentLang}
           onSelectLanguage={setCurrentLang}
           onContinue={handleContinueFromWelcome}
-          onSpeakGreeting={(txt, code) => handleSpeak(txt)}
+          onSpeakGreeting={(txt) => handleSpeak(txt)}
         />
-      ) : (
+      )}
+
+      {screen === 'chat' && (
         <ChatScreen
           currentLang={currentLang}
           messages={messages}
@@ -361,6 +370,25 @@ export default function App() {
           interimTranscript={interimTranscript}
           onToggleMic={handleToggleMic}
           isLoading={isLoading}
+        />
+      )}
+
+      {screen === 'scholarship_finder' && (
+        <ScholarshipFinder
+          currentLang={currentLang}
+          onBackToChat={() => setScreen('chat')}
+          onReadAloud={(txt) => handleSpeak(txt)}
+          onStopSpeaking={handleStopSpeaking}
+          audioEnabled={audioEnabled || accessibilityMode}
+        />
+      )}
+
+      {screen === 'services_guide' && (
+        <ServicesGuide
+          defaultTab={servicesDefaultTab}
+          currentLang={currentLang}
+          onBackToChat={() => setScreen('chat')}
+          onReadAloud={(txt) => handleSpeak(txt)}
         />
       )}
 
