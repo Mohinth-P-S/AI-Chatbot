@@ -19,7 +19,13 @@ export default function WelcomeScreen({
 
   return (
     <main id="main-content" className="welcome-screen" role="main">
-      <div className="welcome-hero-icon" aria-hidden="true">🏛️</div>
+      <div className="welcome-hero-logo-box">
+        <img
+          src="/navigov-logo.png"
+          alt="NaviGov - Navigate through Government schemes"
+          className="welcome-hero-logo"
+        />
+      </div>
       <h2 className="welcome-title">{t.welcomeHeading}</h2>
       <p className="welcome-desc">{t.welcomeSubheading}</p>
 

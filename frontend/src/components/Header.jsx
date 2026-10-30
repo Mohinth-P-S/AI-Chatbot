@@ -15,7 +15,7 @@ export default function Header({
   return (
     <header className="app-header" role="banner">
       <div className="brand" tabIndex="0" onClick={onResetWelcome} style={{ cursor: 'pointer' }} title="Go to Welcome Screen">
-        <span className="brand-icon" aria-hidden="true">🇮🇳</span>
+        <img src="/navigov-icon.png" alt="NaviGov" className="brand-logo-img" />
         <div className="brand-titles">
           <h1>{t.appName}</h1>
           <p>{t.appSubtitle}</p>
