@@ -99,10 +99,10 @@ export default function App() {
     setKioskCountdown(60)
     if (speakNotice) {
       const notice = currentLang === 'ta'
-        ? 'கியோஸ்க் அமர்வு மீட்டமைக்கப்பட்டது. ஜன சஹாயக்கிற்கு வருக.'
+        ? 'கியோஸ்க் அமர்வு மீட்டமைக்கப்பட்டது. நேவிகோவிற்க்கு (NaviGov) வருக.'
         : (currentLang === 'hi'
-          ? 'कियोस्क सत्र रीसेट हो गया है। जन सहायक में आपका स्वागत है।'
-          : 'Kiosk session reset. Welcome to Jan Sahayak.')
+          ? 'कियोस्क सत्र रीसेट हो गया है। नेविगोव (NaviGov) में आपका स्वागत है।'
+          : 'Kiosk session reset. Welcome to NaviGov.')
       handleSpeak(notice)
     }
   }

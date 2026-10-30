@@ -1,11 +1,13 @@
 """
-Grounded Conversational AI Engine for Jan Sahayak.
+Grounded Conversational AI Engine for NaviGov (Navigate Government Schemes).
 Answers citizen inquiries strictly using the official knowledge base.
+Clarifies doubts regarding government certificates, scholarships, pensions, and eligibility.
 Extracts profile updates and provides multilingual replies in Tamil, Hindi, or English.
 """
 import os
 import json
 import logging
+import re
 from typing import Dict, Any, List, Optional
 from pydantic import BaseModel, Field
 from app.eligibility import CitizenProfile, load_knowledge_base, DATA_DIR
@@ -31,39 +33,84 @@ class ChatResponse(BaseModel):
     human_fallback: bool = False
 
 def find_relevant_knowledge(query: str, kb: Dict[str, List[Dict[str, Any]]]) -> List[Dict[str, Any]]:
-    """Heuristic keyword match across schemes and certificates to inject into prompt context."""
+    """
+    Intelligent keyword and category matcher across schemes, certificates, and pensions.
+    Extracts relevant context for Gemini to accurately resolve citizen doubts.
+    """
     q_lower = query.lower()
     matches = []
+    added_ids = set()
 
-    # Check scholarships
-    for s in kb.get("scholarships", []):
-        name_tokens = s["name"].lower().split()
-        if any(token in q_lower for token in name_tokens if len(token) > 3) or \
-           s["id"] in q_lower or \
-           ("pudhumai" in q_lower and "pudhumai" in s["id"]) or \
-           ("pudhalvan" in q_lower and "pudhalvan" in s["id"]) or \
-           (any(w in q_lower for w in ["girl", "female", "women", "பெண்", "மாணவி", "மகளிர்", "लड़की", "महिला"]) and (s["eligibility_rules"].get("gender") == "female" or "pudhumai" in s["id"] or "pragati" in s["id"])) or \
-           ("sc" in q_lower and "sc" in s["id"]) or \
-           ("st" in q_lower and "st" in s["id"]) or \
-           ("obc" in q_lower and "obc" in s["id"]) or \
-           ("disability" in q_lower or "pwd" in q_lower or "மாற்றுத்திறனாளி" in q_lower):
-            matches.append({"type": "scholarship", **s})
+    def add_match(item: Dict[str, Any], item_type: str):
+        item_id = item.get("id", item.get("name"))
+        if item_id not in added_ids:
+            added_ids.add(item_id)
+            matches.append({"type": item_type, **item})
 
-    # Check certificates
+    # 1. Match Certificates
+    is_asking_certificate = any(w in q_lower for w in [
+        "cert", "சான்றிதழ்", "प्रमाण", "income", "வருமானம்", "आय",
+        "community", "சாதி", "जाति", "caste", "nativity", "இருப்பிடம்", "निवास",
+        "first graduate", "முதல் பட்டதாரி", "प्रथम स्नातक",
+        "legal heir", "வாரிசு", "वारिस", "residence", "tnesevai", "e-sevai", "esevai",
+        "document", "ஆவணம்", "दस्तावेज़", "apply", "விண்ணப்பிக்க", "आवेदन"
+    ])
+
     for c in kb.get("certificates", []):
-        if any(term in q_lower for term in ["certificate", "சான்றிதழ்", "प्रमाण", "income", "community", "nativity", "residence", "birth", "death"]):
-            matches.append({"type": "certificate", **c})
+        c_id = c.get("id", "").lower()
+        c_name = c.get("name", "").lower()
+        if any(tok in q_lower for tok in [c_id, c_name] if tok) or \
+           ("income" in q_lower and "income" in c_id) or \
+           (any(w in q_lower for w in ["community", "caste", "சாதி", "जाति"]) and "community" in c_id) or \
+           (any(w in q_lower for w in ["nativity", "residence", "இருப்பிடம்", "निवास"]) and "nativity" in c_id) or \
+           (any(w in q_lower for w in ["first graduate", "graduate", "பட்டதாரி", "स्नातक"]) and "first-graduate" in c_id) or \
+           (any(w in q_lower for w in ["legal heir", "heir", "வாரிசு", "वारिस"]) and "legal-heir" in c_id) or \
+           is_asking_certificate:
+            add_match(c, "certificate")
 
-    # Check pensions
+    # 2. Match Scholarships
+    is_asking_scholarship = any(w in q_lower for w in [
+        "scholarship", "உதவித்தொகை", "छात्रवृत्ति", "college", "கல்லூரி", "कॉलेज",
+        "school", "பள்ளி", "स्कूल", "study", "படிப்பு", "पढ़ाई", "student", "மாணவர்", "छात्र",
+        "degree", "diploma", "engineering", "b.sc", "b.tech", "fees", "கல்விக்கட்டணம்", "फीस",
+        "pudhumai", "புதுமைப்பெண்", "pudhalvan", "புதல்வன்", "nmms", "pragati", "saksham"
+    ])
+
+    for s in kb.get("scholarships", []):
+        s_id = s.get("id", "").lower()
+        s_name = s.get("name", "").lower()
+        name_tokens = [t for t in s_name.split() if len(t) > 3]
+
+        if any(token in q_lower for token in name_tokens) or \
+           s_id in q_lower or \
+           ("pudhumai" in q_lower and "pudhumai" in s_id) or \
+           ("pudhalvan" in q_lower and "pudhalvan" in s_id) or \
+           (any(w in q_lower for w in ["girl", "female", "women", "பெண்", "மாணவி", "மகளிர்", "लड़की", "महिला"]) and (s["eligibility_rules"].get("gender") == "female" or "pudhumai" in s_id or "pragati" in s_id)) or \
+           (any(w in q_lower for w in ["boy", "male", "ஆண்", "மாணவன்", "लड़का"]) and (s["eligibility_rules"].get("gender") == "male" or "pudhalvan" in s_id)) or \
+           ("sc" in q_lower and "sc" in s_id) or \
+           ("st" in q_lower and "st" in s_id) or \
+           (any(w in q_lower for w in ["obc", "bc", "mbc"]) and ("obc" in s_id or "bc" in s_id or "mbc" in s_id)) or \
+           (any(w in q_lower for w in ["disability", "pwd", "மாற்றுத்திறனாளி", "दिव्यांग"]) and ("disab" in s_id or "pwd" in s_id or "saksham" in s_id)) or \
+           (is_asking_scholarship and ("pudhumai" in s_id or "pudhalvan" in s_id or "post-matric" in s_id or "central" in s_id)):
+            add_match(s, "scholarship")
+
+    # 3. Match Pensions
     for p in kb.get("pensions", []):
-        if any(term in q_lower for term in ["pension", "ஓய்வூதியம்", "पेंशन", "oap", "widow", "disability", "deserted", "old age"]):
-            matches.append({"type": "pension", **p})
+        p_id = p.get("id", "").lower()
+        if any(term in q_lower for term in ["pension", "ஓய்வூதியம்", "पेंशन", "oap", "widow", "விதவை", "विधवा", "old age", "முதியோர்", "बुजुर्ग", "deserted", "கைவிடப்பட்ட"]) or \
+           p_id in q_lower:
+            add_match(p, "pension")
 
-    # If no specific keyword matched, include summary of key services
+    # If no specific matches found, provide popular cornerstone schemes & certificates
     if not matches:
-        matches = kb.get("scholarships", [])[:5] + kb.get("certificates", [])[:3] + kb.get("pensions", [])[:2]
+        for s in kb.get("scholarships", [])[:4]:
+            add_match(s, "scholarship")
+        for c in kb.get("certificates", [])[:3]:
+            add_match(c, "certificate")
+        for p in kb.get("pensions", [])[:2]:
+            add_match(p, "pension")
 
-    return matches[:8]
+    return matches[:10]
 
 def build_gemini_prompt(user_message: str, language: str, context_items: List[Dict[str, Any]], current_profile: Dict[str, Any]) -> str:
     lang_names = {"ta": "Tamil (தமிழ்)", "hi": "Hindi (हिन्दी)", "en": "English"}
@@ -72,34 +119,38 @@ def build_gemini_prompt(user_message: str, language: str, context_items: List[Di
     context_json = json.dumps(context_items, indent=2, ensure_ascii=False)
     profile_json = json.dumps(current_profile, indent=2, ensure_ascii=False)
 
-    return f"""You are 'Jan Sahayak' (மக்கள் உதவியாளர் / जन सहायक), an empathetic, dignified, and helpful government scheme advisor for Indian citizens.
+    return f"""You are 'NaviGov' (Navigate Government Schemes / அரசு திட்ட வழிகாட்டி / नेविगोव), an expert, kind, patient, and highly knowledgeable citizen scheme and certificate advisor.
 
-KNOWLEDGE BASE CONTEXT (ONLY USE THIS INFORMATION):
+YOUR MISSION:
+Clarify citizen doubts regarding government certificates (Income, Community, Nativity, First Graduate, Legal Heir), scholarships (Post-Matric, Pre-Matric, Pudhumai Penn, Tamil Pudhalvan, Merit, PwD), welfare pensions, and eligibility criteria.
+
+KNOWLEDGE BASE CONTEXT (USE THIS FACTUAL INFORMATION):
 {context_json}
 
 CURRENT CITIZEN PROFILE:
 {profile_json}
 
-USER'S MESSAGE:
+CITIZEN QUESTION / DOUBT:
 "{user_message}"
 
 TARGET RESPONSE LANGUAGE: {target_lang}
 
-STRICT OPERATING RULES:
-1. ONLY answer using facts from the KNOWLEDGE BASE CONTEXT provided above. NEVER invent an eligibility rule, amount, deadline, or URL.
-2. If the user asks about something not in the knowledge base, respond in {target_lang} stating clearly that you do not have that specific information, and advise them to use the "Talk to a human" button or visit their local Arasu e-Sevai / Common Service Centre (CSC).
-3. If an answer relates to a scheme or certificate, include the official source URL and last verified date in your explanation.
-4. Keep explanations simple, reassuring, and easy to understand for rural citizens and senior citizens.
-5. EXTRACT CITIZEN PROFILE ATTRIBUTES: Look for any user attributes mentioned (age, family_income in numbers, gender ['male'/'female'/'other'], category ['SC'/'ST'/'OBC'/'MBC'/'BC'/'General'/'Minority'], is_disabled [true/false], education_level, state, studied_in_govt_school [true/false], marital_status). Update the citizen profile.
+CORE ADVISING GUIDELINES:
+1. DIRECT & EMPOWERING ANSWER: Start with a direct, warm, and helpful answer in {target_lang} clarifying the citizen's doubt clearly.
+2. ELIGIBILITY CLARITY: Explain clearly who is eligible (income ceiling, caste categories, age limits, school/college criteria).
+3. MANDATORY DOCUMENTS: If answering about a certificate or scheme, list the specific documents needed (e.g. Aadhaar Card, Ration Card, Salary Slip / VAO report, Marksheet, Bonafide certificate).
+4. HOW TO APPLY: Provide clear step-by-step application guidance (e.g., Apply online at TN e-Sevai / NSP portal or visit nearest Arasu e-Sevai / CSC Center). Mention the standard government service fee (e.g. ₹60) and processing time if applicable.
+5. GROUNDING: Only quote official facts from the knowledge base context. If a user asks about something completely outside government schemes, politely state you specialize in government schemes, certificates, and pensions, and recommend checking with official portals or visiting e-Sevai.
+6. PROFILE EXTRACTION: Detect any citizen attributes mentioned in the message (age, family_income [integer], gender ['male'/'female'], category ['SC'/'ST'/'OBC'/'BC'/'MBC'/'General'], education_level, studied_in_govt_school [true/false], marital_status) and output them in 'updated_profile_fields'.
 
 OUTPUT FORMAT:
-You MUST respond strictly with a valid JSON object in this exact schema, with no markdown code fences:
+Respond STRICTLY with a valid JSON object matching this schema, without markdown code fences or backticks:
 {{
-  "reply": "Empathetic, clear answer in {target_lang}",
+  "reply": "Clear, friendly, step-by-step explanation in {target_lang}",
   "updated_profile_fields": {{}},
-  "suggested_actions": ["check_eligibility", "view_documents", "talk_to_human"],
+  "suggested_actions": ["check_eligibility", "documents_needed", "talk_to_human"],
   "sources": [
-    {{"name": "Scheme name", "url": "https://...", "last_verified": "YYYY-MM-DD"}}
+    {{"name": "Exact scheme or certificate name", "url": "https://...", "last_verified": "YYYY-MM-DD"}}
   ],
   "human_fallback_needed": false
 }}
@@ -109,9 +160,14 @@ def generate_grounded_reply(req: ChatRequest) -> ChatResponse:
     kb = load_knowledge_base()
     relevant_items = find_relevant_knowledge(req.message, kb)
     api_key = os.getenv("GEMINI_API_KEY", "").strip()
-    model_name = os.getenv("GEMINI_MODEL", "gemini-3.8-flash").strip()
 
-    # If Gemini API key is configured and not the default placeholder
+    # Candidate models in preference order (fast, reliable, free-tier supported)
+    configured_model = os.getenv("GEMINI_MODEL", "gemini-3.5-flash").strip()
+    candidate_models = [configured_model]
+    for fallback_m in ["gemini-3.5-flash", "gemini-3.5-flash-lite", "gemini-flash-latest"]:
+        if fallback_m not in candidate_models:
+            candidate_models.append(fallback_m)
+
     if api_key and api_key != "your_gemini_api_key_here":
         try:
             from google import genai
@@ -123,55 +179,80 @@ def generate_grounded_reply(req: ChatRequest) -> ChatResponse:
             )
             prompt = build_gemini_prompt(req.message, req.language, relevant_items, req.profile or {})
 
-            response = client.models.generate_content(
-                model=model_name,
-                contents=prompt,
-                config=GenerateContentConfig(
-                    response_mime_type="application/json",
-                    temperature=0.2,
-                )
-            )
+            # Try candidate models
+            for model_name in candidate_models:
+                try:
+                    response = client.models.generate_content(
+                        model=model_name,
+                        contents=prompt,
+                        config=types.GenerateContentConfig(
+                            response_mime_type="application/json",
+                            temperature=0.2,
+                        )
+                    )
 
-            result_text = response.text.strip()
-            # Clean possible markdown formatting if present
-            if result_text.startswith("```json"):
-                result_text = result_text[7:]
-            if result_text.endswith("```"):
-                result_text = result_text[:-3]
+                    result_text = response.text.strip()
+                    # Strip any accidental markdown formatting
+                    if result_text.startswith("```json"):
+                        result_text = result_text[7:]
+                    elif result_text.startswith("```"):
+                        result_text = result_text[3:]
+                    if result_text.endswith("```"):
+                        result_text = result_text[:-3]
 
-            data = json.loads(result_text.strip())
+                    data = json.loads(result_text.strip())
 
-            # Merge updated profile
-            updated_profile = dict(req.profile or {})
-            if "updated_profile_fields" in data and isinstance(data["updated_profile_fields"], dict):
-                updated_profile.update(data["updated_profile_fields"])
+                    # Merge updated profile
+                    updated_profile = dict(req.profile or {})
+                    if "updated_profile_fields" in data and isinstance(data["updated_profile_fields"], dict):
+                        updated_profile.update(data["updated_profile_fields"])
 
-            sources = [
-                SourceCitation(
-                    name=s.get("name", "Official Scheme"),
-                    url=s.get("url", "https://scholarships.gov.in"),
-                    last_verified=s.get("last_verified", "2026-10-29")
-                )
-                for s in data.get("sources", [])
-            ]
+                    sources = []
+                    for s in data.get("sources", []):
+                        if isinstance(s, dict) and s.get("name"):
+                            sources.append(SourceCitation(
+                                name=s.get("name", "Official Portal"),
+                                url=s.get("url", "https://tnesevai.tn.gov.in"),
+                                last_verified=s.get("last_verified", "2026-10-30")
+                            ))
 
-            return ChatResponse(
-                reply=data.get("reply", "வணக்கம். நான் உங்களுக்கு எவ்வாறு உதவ முடியும்?"),
-                language=req.language,
-                updated_profile=updated_profile,
-                suggested_actions=data.get("suggested_actions", ["check_eligibility"]),
-                sources=sources,
-                human_fallback=data.get("human_fallback_needed", False)
-            )
+                    if not sources and relevant_items:
+                        for item in relevant_items[:2]:
+                            sources.append(SourceCitation(
+                                name=item.get("name", "Official Scheme"),
+                                url=item.get("source_url", "https://tnesevai.tn.gov.in"),
+                                last_verified=item.get("last_verified", "2026-10-30")
+                            ))
+
+                    fallback_reply = (
+                        "வணக்கம்! நான் நேவிகோவ். உங்கள் கேள்விகளுக்கு பதிலளிக்க தயாராக உள்ளேன்."
+                        if req.language == "ta" else (
+                            "नमस्ते! मैं नेविगोव हूँ। मैं आपके प्रश्नों का उत्तर देने के लिए तैयार हूँ।"
+                            if req.language == "hi" else
+                            "Hello! I am NaviGov. I am ready to help you navigate schemes and certificates."
+                        )
+                    )
+
+                    return ChatResponse(
+                        reply=data.get("reply", fallback_reply),
+                        language=req.language,
+                        updated_profile=updated_profile,
+                        suggested_actions=data.get("suggested_actions", ["check_eligibility"]),
+                        sources=sources,
+                        human_fallback=data.get("human_fallback_needed", False)
+                    )
+                except Exception as model_err:
+                    logger.info("Model %s attempt failed (%s), trying next candidate...", model_name, model_err)
+                    continue
 
         except Exception as exc:
-            logger.warning("Gemini API call failed (%s); using grounded deterministic fallback.", exc)
+            logger.warning("Gemini API invocation failed (%s); using grounded deterministic fallback.", exc)
 
-    # Deterministic fallback when Gemini API key is missing or offline
+    # High-quality deterministic fallback when Gemini API key is missing or offline
     return generate_deterministic_fallback(req, relevant_items)
 
 def generate_deterministic_fallback(req: ChatRequest, relevant_items: List[Dict[str, Any]]) -> ChatResponse:
-    """Provides a safe, verified answer directly from the local JSON files if Gemini is unavailable."""
+    """Provides an accurate, well-structured answer directly from structured datasets if Gemini is offline."""
     lang = req.language
     sources = []
 
@@ -179,26 +260,62 @@ def generate_deterministic_fallback(req: ChatRequest, relevant_items: List[Dict[
         sources.append(SourceCitation(
             name=item.get("name", ""),
             url=item.get("source_url", "https://tnesevai.tn.gov.in"),
-            last_verified=item.get("last_verified", "2026-10-29")
+            last_verified=item.get("last_verified", "2026-10-30")
         ))
 
     first_item = relevant_items[0] if relevant_items else None
 
     if lang == "ta":
         if first_item:
-            reply = f"வணக்கம்! '{first_item.get('name')}' பற்றிய தகவல்கள் இதோ: {first_item.get('short_description')} பயன்கள்: {first_item.get('benefits')}. அதிகாரப்பூர்வ இணையதளம்: {first_item.get('source_url')} (சரிபார்க்கப்பட்ட தேதி: {first_item.get('last_verified')})."
+            name = first_item.get("name")
+            desc = first_item.get("short_description")
+            benefits = first_item.get("benefits", "")
+            docs = ", ".join(first_item.get("required_documents", [])[:4])
+            portal = first_item.get("source_url", "https://tnesevai.tn.gov.in")
+
+            reply = (
+                f"வணக்கம்! **{name}** பற்றிய முழு விவரங்கள் இதோ:\n\n"
+                f"📌 **விளக்கம்:** {desc}\n"
+                f"💰 **பயன்கள் / சலுகை:** {benefits}\n"
+                f"📄 **தேவையான முக்கிய ஆவணங்கள்:** {docs}\n"
+                f"🌐 **விண்ணப்பிக்கும் முறை:** அரசு இ-சேவை மையம் (e-Sevai) அல்லது அதிகாரப்பூர்வ இணையதளம்: {portal}"
+            )
         else:
-            reply = "வணக்கம்! நான் ஜன சஹாயக். உதவித்தொகை, சான்றிதழ்கள் மற்றும் ஓய்வூதியங்கள் பற்றி என்னிடம் கேளுங்கள். மேலும் விவரங்களுக்கு 'அதிகாரியுடன் பேசுங்கள்' பொத்தானை அழுத்தலாம்."
+            reply = "வணக்கம்! நான் நேவிகோவ் (NaviGov). அரசு உதவித்தொகை, வருமானம்/சாதி சான்றிதழ்கள் மற்றும் ஓய்வூதியங்கள் குறித்த உங்கள் சந்தேகங்களை என்னிடம் தெளிவாகக் கேட்கலாம்."
     elif lang == "hi":
         if first_item:
-            reply = f"नमस्ते! '{first_item.get('name')}' की जानकारी: {first_item.get('short_description')} लाभ: {first_item.get('benefits')}. आधिकारिक पोर्टल: {first_item.get('source_url')} (सत्यापित: {first_item.get('last_verified')})."
+            name = first_item.get("name")
+            desc = first_item.get("short_description")
+            benefits = first_item.get("benefits", "")
+            docs = ", ".join(first_item.get("required_documents", [])[:4])
+            portal = first_item.get("source_url", "https://tnesevai.tn.gov.in")
+
+            reply = (
+                f"नमस्ते! **{name}** की पूरी जानकारी:\n\n"
+                f"📌 **विवरण:** {desc}\n"
+                f"💰 **लाभ:** {benefits}\n"
+                f"📄 **आवश्यक दस्तावेज़:** {docs}\n"
+                f"🌐 **आवेदन प्रक्रिया:** निकटतम ई-सेवा (e-Sevai/CSC) केंद्र या आधिकारिक पोर्टल: {portal}"
+            )
         else:
-            reply = "नमस्ते! मैं जन सहायक हूँ। छात्रवृत्ति, प्रमाण पत्र और पेंशन के बारे में आप मुझसे पूछ सकते हैं।"
+            reply = "नमस्ते! मैं नेविगोव (NaviGov) हूँ। छात्रवृत्ति, आय/जाति प्रमाण पत्र और पेंशन योजनाओं से जुड़े किसी भी प्रश्न के लिए मुझसे पूछें।"
     else:
         if first_item:
-            reply = f"Hello! Here is the information on '{first_item.get('name')}': {first_item.get('short_description')} Benefits: {first_item.get('benefits')}. Official Portal: {first_item.get('source_url')} (Verified: {first_item.get('last_verified')})."
+            name = first_item.get("name")
+            desc = first_item.get("short_description")
+            benefits = first_item.get("benefits", "")
+            docs = ", ".join(first_item.get("required_documents", [])[:4])
+            portal = first_item.get("source_url", "https://tnesevai.tn.gov.in")
+
+            reply = (
+                f"Hello! Here are the complete details for **{name}**:\n\n"
+                f"📌 **Overview:** {desc}\n"
+                f"💰 **Benefits:** {benefits}\n"
+                f"📄 **Required Documents:** {docs}\n"
+                f"🌐 **How to Apply:** Apply at your local e-Sevai / CSC Center or online via: {portal}"
+            )
         else:
-            reply = "Hello! I am Jan Sahayak. You can ask me about scholarships, certificates, and welfare pensions. For human assistance, please select 'Talk to a human'."
+            reply = "Hello! I am NaviGov (Navigate Government Schemes). You can ask me any question about government certificates, scholarships, pensions, and eligibility criteria!"
 
     return ChatResponse(
         reply=reply,

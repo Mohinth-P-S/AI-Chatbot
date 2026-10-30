@@ -1,5 +1,5 @@
 """
-Deterministic eligibility engine for Jan Sahayak.
+Deterministic eligibility engine for NaviGov (Navigate Government Schemes).
 Evaluates citizen profiles against structured scheme rules.
 Returns three mutually exclusive groups:
   - eligible: User definitely satisfies all requirements

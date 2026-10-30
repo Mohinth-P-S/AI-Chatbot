@@ -1,1 +1,1 @@
-"""Jan Sahayak Backend Application Package."""
+"""NaviGov Backend Application Package."""

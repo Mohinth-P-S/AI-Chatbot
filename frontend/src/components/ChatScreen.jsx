@@ -83,10 +83,10 @@ export default function ChatScreen({
             <article
               key={idx}
               className={`msg-row ${msg.sender === 'user' ? 'user' : 'assistant'}`}
-              aria-label={`${msg.sender === 'user' ? 'You' : 'Jan Sahayak'}`}
+              aria-label={`${msg.sender === 'user' ? 'You' : 'NaviGov'}`}
             >
               <div className={`bubble ${isSpeakingThis ? 'is-speaking' : ''}`}>
-                <p>{msg.text}</p>
+                <p style={{ whiteSpace: 'pre-line' }}>{msg.text}</p>
 
                 {/* Citations / Sources if provided */}
                 {msg.sources && msg.sources.length > 0 && (
@@ -136,6 +136,26 @@ export default function ChatScreen({
           )
         })}
 
+        {/* Suggested Quick Question Chips (rendered if conversation has started) */}
+        {t.doubtChips && t.doubtChips.length > 0 && (
+          <div className="doubt-chips-container" aria-label="Suggested common questions">
+            <p className="doubt-chips-title">{t.doubtChipsHeading}</p>
+            <div className="doubt-chips-grid">
+              {t.doubtChips.map((chip, cIdx) => (
+                <button
+                  key={cIdx}
+                  type="button"
+                  className="doubt-chip-btn"
+                  onClick={() => onSendMessage(chip)}
+                  disabled={isLoading}
+                >
+                  💬 {chip}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Live Interim Speech Bubble */}
         {isListening && interimTranscript && (
           <div className="interim-bubble" aria-live="polite">
@@ -147,7 +167,7 @@ export default function ChatScreen({
         {isLoading && (
           <div className="msg-row assistant">
             <div className="bubble" style={{ fontStyle: 'italic', color: 'var(--text-secondary)' }}>
-              <span>⌛ {currentLang === 'ta' ? 'ஜன சஹாயக் பதிலளிக்கிறது...' : (currentLang === 'hi' ? 'जन सहायक उत्तर दे रहा है...' : 'Jan Sahayak is thinking...')}</span>
+              <span>⌛ {currentLang === 'ta' ? 'நேவிகோவ் பதிலளிக்கிறது...' : (currentLang === 'hi' ? 'नेविगोव उत्तर दे रहा है...' : 'NaviGov is thinking...')}</span>
             </div>
           </div>
         )}

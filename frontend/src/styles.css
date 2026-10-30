@@ -364,7 +364,53 @@ body.a11y-mode .action-pill {
   border-width: 2px;
 }
 
-/* Messages Area */
+/* Doubt Clarification Chips */
+.doubt-chips-container {
+  margin: 14px 0 20px 0;
+  padding: 14px;
+  background: var(--bg-surface);
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  animation: fadeIn 0.3s ease;
+}
+
+.doubt-chips-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+.doubt-chips-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.doubt-chip-btn {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 8px 14px;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  line-height: 1.3;
+}
+
+.doubt-chip-btn:hover {
+  background: var(--accent-light);
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+body.a11y-mode .doubt-chip-btn {
+  border: 2px solid var(--text-primary);
+  font-weight: 700;
+}
+
 .messages-area {
   flex: 1;
   padding: 20px 16px;

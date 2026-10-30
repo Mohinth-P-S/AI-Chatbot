@@ -23,14 +23,14 @@ env_path = Path(__file__).resolve().parent.parent / ".env"
 load_dotenv(dotenv_path=env_path)
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.8-flash")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.5-flash")
 ALLOWED_ORIGINS_RAW = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173,http://localhost:8005")
 ALLOWED_ORIGINS = [origin.strip() for origin in ALLOWED_ORIGINS_RAW.split(",") if origin.strip()]
 
 app = FastAPI(
-    title="Jan Sahayak API",
-    description="Backend API for Jan Sahayak: Voice-first citizen scheme & certificate assistant",
-    version="0.2.0",
+    title="NaviGov API",
+    description="Backend API for NaviGov: Navigate Government Schemes, Certificates & Scholarships",
+    version="0.3.0",
 )
 
 # Configure CORS
@@ -81,7 +81,7 @@ def health_check():
 
     return {
         "status": "ok",
-        "service": "Jan Sahayak Backend API",
+        "service": "NaviGov Backend API",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "gemini_configured": is_key_configured,
         "model": GEMINI_MODEL,
