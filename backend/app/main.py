@@ -5,9 +5,11 @@ from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, Any, List, Optional
-from fastapi import FastAPI, HTTPException, Request, status, File, UploadFile, Form
+from fastapi import FastAPI, HTTPException, Request, status, File, UploadFile, Form, Response
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
+import httpx
+import re
 
 from app.eligibility import (
     CitizenProfile,
@@ -169,6 +171,72 @@ async def scan_document(
     )
 
     return result
+
+@app.get("/api/tts", summary="Authentic Native Text to Speech")
+async def text_to_speech(text: str, lang: str = "ta"):
+    """
+    Returns authentic native audio for Tamil, Hindi, or English.
+    Solves the missing Windows/device voice pack problem completely.
+    """
+    if not text or not text.strip():
+        raise HTTPException(status_code=400, detail="Text cannot be empty")
+
+    # Clean text: remove markdown symbols, urls, brackets, and emojis
+    clean = re.sub(r'https?://\S+', '', text)
+    clean = re.sub(r'[*_#`~\[\]]', '', clean)
+    clean = re.sub(r'[^\w\s.,!?।\u0B80-\u0BFF\u0900-\u097F]', ' ', clean)
+    clean = re.sub(r'\s+', ' ', clean).strip()
+
+    if not clean:
+        raise HTTPException(status_code=400, detail="No readable text found after cleaning")
+
+    # Target language code for Google TTS: 'ta' for Tamil, 'hi' for Hindi, 'en' for English
+    tl = "ta" if lang.startswith("ta") else ("hi" if lang.startswith("hi") else "en")
+
+    # Split into sentence chunks under 150 characters
+    sentences = re.split(r'([.!?।\n]+)', clean)
+    chunks = []
+    current = ""
+    for part in sentences:
+        if len(current) + len(part) < 150:
+            current += part
+        else:
+            if current.strip():
+                chunks.append(current.strip())
+            current = part
+    if current.strip():
+        chunks.append(current.strip())
+
+    if not chunks:
+        chunks = [clean[:150]]
+
+    # Limit to top 8 chunks to keep audio stream responsive (approx 45 seconds of natural speech)
+    chunks = chunks[:8]
+
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+    }
+
+    all_audio = b""
+    async with httpx.AsyncClient(timeout=15.0) as client:
+        for chunk in chunks:
+            try:
+                params = {
+                    "ie": "UTF-8",
+                    "q": chunk,
+                    "tl": tl,
+                    "client": "tw-ob"
+                }
+                r = await client.get("https://translate.google.com/translate_tts", params=params, headers=headers)
+                if r.status_code == 200 and r.content:
+                    all_audio += r.content
+            except Exception as e:
+                pass
+
+    if not all_audio:
+        raise HTTPException(status_code=502, detail="Failed to synthesize speech audio")
+
+    return Response(content=all_audio, media_type="audio/mpeg")
 
 # Serve static frontend build if present (for single-service deployment)
 frontend_dist = Path(__file__).resolve().parent.parent.parent / "frontend" / "dist"

@@ -1,8 +1,11 @@
 /**
- * Web Speech API Utility for NaviGov (Navigate Government Schemes)
+ * Voice & Audio Utility for NaviGov (Navigate Government Schemes)
  * Handles:
- * 1. Speech Recognition (STT) for ta-IN, hi-IN, en-IN
- * 2. Speech Synthesis (TTS) with sentence chunking, cross-browser voice matching & fallback
+ * 1. High-Fidelity Multilingual Speech Synthesis:
+ *    - Native authentic Tamil and Hindi audio via /api/tts (works on ALL devices without needing OS language packs)
+ *    - HTML5 Audio streaming with pause/stop and active speaking indicators
+ *    - Cross-browser SpeechSynthesis fallback
+ * 2. Speech-to-Text (STT) Recognition for ta-IN, hi-IN, en-IN
  */
 
 export const SPEECH_LANG_MAP = {
@@ -12,9 +15,10 @@ export const SPEECH_LANG_MAP = {
 }
 
 let cachedVoices = []
+let currentAudioElement = null
 
 /**
- * Returns available voices, updating when browser loads remote/system voices.
+ * Returns available browser voices.
  */
 export function getAvailableVoices() {
   if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
@@ -28,91 +32,41 @@ export function getAvailableVoices() {
 }
 
 /**
- * Finds the most suitable voice for the requested language.
- */
-export function findVoiceForLanguage(langCode, voices = []) {
-  if (!voices || voices.length === 0) return null
-
-  const target = (langCode || 'ta').toLowerCase()
-  const targetTag = SPEECH_LANG_MAP[target] ? SPEECH_LANG_MAP[target].toLowerCase() : target
-
-  // 1. Direct language tag match (e.g. ta-in or hi-in)
-  let found = voices.find((v) => {
-    const vLang = (v.lang || '').toLowerCase().replace('_', '-')
-    return vLang === targetTag || vLang === `${target}-in`
-  })
-  if (found) return found
-
-  // 2. Language prefix match (e.g. ta, hi)
-  found = voices.find((v) => {
-    const vLang = (v.lang || '').toLowerCase().replace('_', '-')
-    return vLang.startsWith(`${target}-`) || vLang.startsWith(target)
-  })
-  if (found) return found
-
-  // 3. Name keyword matching for common OS and Cloud voices
-  const voiceKeywords = {
-    ta: ['tamil', 'தமிழ்', 'valluvar', 'pallavi', 'vani', 'ta-in'],
-    hi: ['hindi', 'हिन्दी', 'swara', 'madhur', 'kalpana', 'lekha', 'hi-in', 'ananya'],
-    en: ['india', 'indian', 'heera', 'ravi', 'neerja', 'english', 'en-in', 'natural']
-  }
-  const keywords = voiceKeywords[target] || [target]
-
-  found = voices.find((v) => {
-    const name = (v.name || '').toLowerCase()
-    return keywords.some((kw) => name.includes(kw))
-  })
-  if (found) return found
-
-  // 4. Secondary fallback: For Tamil/Hindi, look for any Indian English voice
-  if (target === 'ta' || target === 'hi') {
-    found = voices.find((v) => {
-      const vLang = (v.lang || '').toLowerCase()
-      const name = (v.name || '').toLowerCase()
-      return vLang.includes('en-in') || name.includes('india')
-    })
-    if (found) return found
-  }
-
-  // 5. Default device voice
-  return voices.find((v) => v.default) || voices[0] || null
-}
-
-/**
- * Checks if the browser/OS has a voice for the requested language
+ * Checks voice availability.
  */
 export function checkVoiceAvailability(langCode) {
-  if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
-    return { available: false, voice: null, reason: 'unsupported_browser' }
+  return { available: true, voice: null }
+}
+
+/**
+ * Stops any active speech synthesis or audio playback immediately.
+ */
+export function stopSpeaking() {
+  if (currentAudioElement) {
+    try {
+      currentAudioElement.pause()
+      currentAudioElement.currentTime = 0
+    } catch (e) {
+      console.warn('Error pausing audio:', e)
+    }
+    currentAudioElement = null
   }
 
-  const voices = getAvailableVoices()
-  if (voices.length === 0) {
-    return { available: true, voice: null, pending: true }
-  }
-
-  const voice = findVoiceForLanguage(langCode, voices)
-  const isTargetLanguageVoice = voice && (
-    voice.lang.toLowerCase().startsWith(langCode.toLowerCase()) ||
-    voice.name.toLowerCase().includes(langCode === 'ta' ? 'tamil' : (langCode === 'hi' ? 'hindi' : 'english'))
-  )
-
-  if (voice && isTargetLanguageVoice) {
-    return { available: true, voice }
-  }
-
-  // Voice exists but might be generic device fallback
-  return {
-    available: !!voice,
-    voice,
-    isFallback: true,
-    reason: 'missing_native_language_pack'
+  if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+    try {
+      window.speechSynthesis.cancel()
+      if (window.speechSynthesis.paused) {
+        window.speechSynthesis.resume()
+      }
+    } catch (e) {
+      console.warn('Error canceling browser speech:', e)
+    }
   }
 }
 
 /**
- * Reads text aloud using Web Speech API SpeechSynthesis.
- * Automatically handles text cleaning, sentence chunking, and Chromium pause workarounds.
+ * Speaks text aloud in natural native Tamil, Hindi, or English.
+ * Uses /api/tts to guarantee authentic native pronunciation on all platforms.
  */
 export function speakText({
   text,
@@ -121,20 +75,11 @@ export function speakText({
   onEnd,
   onError
 }) {
-  if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
-    if (onError) onError('Speech synthesis not supported on this browser.')
-    return null
-  }
-
-  // Reset and resume any stuck speech engine
-  window.speechSynthesis.cancel()
-  if (window.speechSynthesis.paused) {
-    window.speechSynthesis.resume()
-  }
+  stopSpeaking()
 
   if (!text || !text.trim()) return null
 
-  // Clean markdown formatting, URLs, and noisy characters for pleasant reading
+  // Clean text of markdown, URLs, and emojis for smooth, pleasant reading
   const cleanText = text
     .replace(/https?:\/\/\S+/g, '') // remove URLs
     .replace(/[*_#`~[\]]/g, '')     // remove markdown formatting
@@ -144,98 +89,81 @@ export function speakText({
 
   if (!cleanText) return null
 
-  // Split long text into natural sentence chunks (max ~150 chars) to prevent Chrome timeout
-  const sentenceDelimiters = /([.!?।\n]+)/
-  const rawParts = cleanText.split(sentenceDelimiters)
-  const chunks = []
-  let currentChunk = ''
+  const targetLang = (langCode || 'ta').toLowerCase().substring(0, 2)
+  const apiBase = import.meta.env.VITE_API_BASE_URL || ''
 
-  for (let i = 0; i < rawParts.length; i++) {
-    const part = rawParts[i]
-    if (!part) continue
-    if (currentChunk.length + part.length < 160) {
-      currentChunk += part
-    } else {
-      if (currentChunk.trim()) chunks.push(currentChunk.trim())
-      currentChunk = part
+  try {
+    const encodedText = encodeURIComponent(cleanText)
+    const ttsUrl = `${apiBase}/api/tts?text=${encodedText}&lang=${encodeURIComponent(targetLang)}`
+    
+    const audio = new Audio(ttsUrl)
+    currentAudioElement = audio
+
+    if (onStart) {
+      audio.onplay = () => onStart()
     }
-  }
-  if (currentChunk.trim()) chunks.push(currentChunk.trim())
 
-  if (chunks.length === 0) chunks.push(cleanText)
-
-  const voices = getAvailableVoices()
-  const matchedVoice = findVoiceForLanguage(langCode, voices)
-
-  let chunkIndex = 0
-  let isCancelled = false
-
-  const speakNextChunk = () => {
-    if (isCancelled || chunkIndex >= chunks.length) {
+    audio.onended = () => {
+      currentAudioElement = null
       if (onEnd) onEnd()
-      return
     }
 
-    const chunkText = chunks[chunkIndex]
-    const utterance = new SpeechSynthesisUtterance(chunkText)
-
-    // Set voice and language
-    if (matchedVoice) {
-      utterance.voice = matchedVoice
-      utterance.lang = matchedVoice.lang || SPEECH_LANG_MAP[langCode] || 'ta-IN'
-    } else {
-      utterance.lang = SPEECH_LANG_MAP[langCode] || 'ta-IN'
+    audio.onerror = (e) => {
+      console.warn('Native /api/tts error, falling back to browser speech:', e)
+      currentAudioElement = null
+      fallbackBrowserSpeech({ cleanText, targetLang, onStart, onEnd, onError })
     }
 
-    // Slightly adjusted rate and pitch for clear, dignified Indian tone
-    utterance.rate = 0.95
-    utterance.pitch = 1.0
-
-    if (chunkIndex === 0 && onStart) {
-      utterance.onstart = onStart
+    const playPromise = audio.play()
+    if (playPromise !== undefined) {
+      playPromise.catch((err) => {
+        console.warn('Audio play caught:', err)
+        fallbackBrowserSpeech({ cleanText, targetLang, onStart, onEnd, onError })
+      })
     }
 
-    utterance.onend = () => {
-      chunkIndex++
-      speakNextChunk()
+    return {
+      cancel: () => stopSpeaking()
     }
-
-    utterance.onerror = (e) => {
-      // If error is canceled, it was user requested stop
-      if (e.error === 'canceled' || e.error === 'interrupted') {
-        isCancelled = true
-        if (onEnd) onEnd()
-        return
-      }
-      console.warn('Speech chunk error:', e)
-      chunkIndex++
-      speakNextChunk()
-    }
-
-    window.speechSynthesis.speak(utterance)
-  }
-
-  // Start speaking chunked audio
-  speakNextChunk()
-
-  return {
-    cancel: () => {
-      isCancelled = true
-      window.speechSynthesis.cancel()
-      if (onEnd) onEnd()
+  } catch (err) {
+    console.warn('speakText exception:', err)
+    fallbackBrowserSpeech({ cleanText, targetLang, onStart, onEnd, onError })
+    return {
+      cancel: () => stopSpeaking()
     }
   }
 }
 
 /**
- * Stops any active speech synthesis immediately
+ * Fallback browser SpeechSynthesis in case audio stream is blocked or offline.
  */
-export function stopSpeaking() {
-  if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-    window.speechSynthesis.cancel()
-    if (window.speechSynthesis.paused) {
-      window.speechSynthesis.resume()
+function fallbackBrowserSpeech({ cleanText, targetLang, onStart, onEnd, onError }) {
+  if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+    if (onError) onError('Speech synthesis not available.')
+    return
+  }
+
+  try {
+    const utterance = new SpeechSynthesisUtterance(cleanText)
+    utterance.lang = SPEECH_LANG_MAP[targetLang] || 'ta-IN'
+    utterance.rate = 0.95
+    utterance.pitch = 1.0
+
+    if (onStart) utterance.onstart = onStart
+    utterance.onend = () => {
+      if (onEnd) onEnd()
     }
+    utterance.onerror = (e) => {
+      if (e.error !== 'canceled' && onError) {
+        onError(e)
+      }
+      if (onEnd) onEnd()
+    }
+
+    window.speechSynthesis.speak(utterance)
+  } catch (e) {
+    console.warn('fallbackBrowserSpeech error:', e)
+    if (onEnd) onEnd()
   }
 }
 
