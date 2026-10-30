@@ -1,0 +1,492 @@
+[
+  {
+    "id": "post-matric-sc-central",
+    "name": "Post-Matric Scholarship for SC Students",
+    "level": "central",
+    "state": "All",
+    "short_description": "Centrally sponsored scholarship providing financial support to Scheduled Caste students studying in classes 11, 12, ITI, Diploma, Undergraduate, and Postgraduate courses.",
+    "benefits": "Compulsory non-refundable fees paid to the institution plus maintenance allowance of up to ₹13,500 per year directly to student bank account via DBT.",
+    "eligibility_rules": {
+      "min_age": 14,
+      "max_age": 35,
+      "max_family_income": 250000,
+      "allowed_categories": ["SC"],
+      "gender": "any",
+      "requires_disability": false,
+      "education_levels": ["Class 11", "Class 12", "ITI", "Diploma", "Undergraduate", "Postgraduate", "PhD"],
+      "minimum_marks_percentage": 0
+    },
+    "required_documents": [
+      "Aadhaar Card",
+      "Community/Caste Certificate (SC)",
+      "Income Certificate (Family income <= ₹2.5 Lakhs)",
+      "Class 10 / Previous Qualifying Examination Marksheet",
+      "Bank Account Passbook (Aadhaar Seeded)",
+      "College/School Fee Receipt and Admission Letter"
+    ],
+    "how_to_apply": "Apply online through the National Scholarship Portal (scholarships.gov.in) using your One-Time Registration (OTR) ID.",
+    "deadline": "Check portal (usually October - November annually)",
+    "source_url": "https://scholarships.gov.in",
+    "last_verified": "2026-10-29",
+    "status": "verified"
+  },
+  {
+    "id": "post-matric-st-central",
+    "name": "Post-Matric Scholarship for ST Students",
+    "level": "central",
+    "state": "All",
+    "short_description": "Ministry of Tribal Affairs centrally sponsored scheme for Scheduled Tribe students pursuing recognized post-matriculation courses.",
+    "benefits": "Full course fee reimbursement, study tour charges, and monthly maintenance allowance up to ₹1,200/month for hostellers and ₹550/month for day scholars.",
+    "eligibility_rules": {
+      "min_age": 14,
+      "max_age": 35,
+      "max_family_income": 250000,
+      "allowed_categories": ["ST"],
+      "gender": "any",
+      "requires_disability": false,
+      "education_levels": ["Class 11", "Class 12", "ITI", "Diploma", "Undergraduate", "Postgraduate", "PhD"],
+      "minimum_marks_percentage": 0
+    },
+    "required_documents": [
+      "Aadhaar Card",
+      "ST Caste Certificate issued by competent Revenue Authority",
+      "Income Certificate (Family income <= ₹2.5 Lakhs)",
+      "Previous Academic Marksheet",
+      "Aadhaar-linked Bank Account Passbook",
+      "Institutional Enrollment/Admission Proof"
+    ],
+    "how_to_apply": "Register on the National Scholarship Portal (scholarships.gov.in) with OTR and submit application under Ministry of Tribal Affairs.",
+    "deadline": "Check portal (usually October - November annually)",
+    "source_url": "https://scholarships.gov.in",
+    "last_verified": "2026-10-29",
+    "status": "verified"
+  },
+  {
+    "id": "post-matric-obc-central",
+    "name": "PM YASASVI Post-Matric Scholarship for OBC/EBC/DNT Students",
+    "level": "central",
+    "state": "All",
+    "short_description": "Central scheme for Other Backward Classes (OBC), Economically Backward Classes (EBC), and De-Notified Tribes (DNT) studying from class 11 to post-graduation.",
+    "benefits": "Academic allowance and tuition fees assistance credited directly to bank account via DBT.",
+    "eligibility_rules": {
+      "min_age": 14,
+      "max_age": 30,
+      "max_family_income": 150000,
+      "allowed_categories": ["OBC", "EBC", "DNT"],
+      "gender": "any",
+      "requires_disability": false,
+      "education_levels": ["Class 11", "Class 12", "ITI", "Diploma", "Undergraduate", "Postgraduate"],
+      "minimum_marks_percentage": 50
+    },
+    "required_documents": [
+      "Aadhaar Card",
+      "OBC / EBC / DNT Community Certificate",
+      "Income Certificate (Family income <= ₹1.5 Lakhs)",
+      "Qualifying Examination Marksheet (Minimum 50%)",
+      "Bank Account Details (Aadhaar Seeded)",
+      "Current Course Admission Proof"
+    ],
+    "how_to_apply": "Apply online at scholarships.gov.in under the Ministry of Social Justice and Empowerment section.",
+    "deadline": "Check portal",
+    "source_url": "https://scholarships.gov.in",
+    "last_verified": "2026-10-29",
+    "status": "verified"
+  },
+  {
+    "id": "pre-matric-sc-central",
+    "name": "Pre-Matric Scholarship Scheme for SC Students",
+    "level": "central",
+    "state": "All",
+    "short_description": "Supports parents of Scheduled Caste children studying in Class 9 and 10 to reduce school dropout rates.",
+    "benefits": "Annual grant of ₹3,500 for day scholars and ₹7,000 for hostellers plus 10% disability allowance if applicable.",
+    "eligibility_rules": {
+      "min_age": 12,
+      "max_age": 18,
+      "max_family_income": 250000,
+      "allowed_categories": ["SC"],
+      "gender": "any",
+      "requires_disability": false,
+      "education_levels": ["Class 9", "Class 10"],
+      "minimum_marks_percentage": 0
+    },
+    "required_documents": [
+      "Aadhaar Card / Child Enrollment ID",
+      "SC Community Certificate",
+      "Income Certificate (<= ₹2.5 Lakhs)",
+      "School Bonafide Certificate",
+      "Bank Account details (Joint or Self)"
+    ],
+    "how_to_apply": "Apply via school nodal officer or online via state portal / scholarships.gov.in.",
+    "deadline": "Check portal",
+    "source_url": "https://scholarships.gov.in",
+    "last_verified": "2026-10-29",
+    "status": "verified"
+  },
+  {
+    "id": "minorities-post-matric",
+    "name": "Post-Matric Scholarship Scheme for Minorities",
+    "level": "central",
+    "state": "All",
+    "short_description": "Ministry of Minority Affairs scheme for meritorious students belonging to notified minority communities (Muslim, Christian, Sikh, Buddhist, Jain, Parsi).",
+    "benefits": "Admission and course fees up to ₹10,000/year plus monthly maintenance allowance up to ₹1,200/month.",
+    "eligibility_rules": {
+      "min_age": 14,
+      "max_age": 30,
+      "max_family_income": 200000,
+      "allowed_categories": ["Minority", "General", "OBC"],
+      "gender": "any",
+      "requires_disability": false,
+      "education_levels": ["Class 11", "Class 12", "ITI", "Diploma", "Undergraduate", "Postgraduate", "PhD"],
+      "minimum_marks_percentage": 50
+    },
+    "required_documents": [
+      "Aadhaar Card",
+      "Self-Declaration / Minority Community Certificate",
+      "Income Certificate issued by Revenue Authority (<= ₹2 Lakhs)",
+      "Previous Year Marksheet (Minimum 50% marks)",
+      "Bank Passbook copy",
+      "Current Academic Year Fee Receipt"
+    ],
+    "how_to_apply": "Apply online on the National Scholarship Portal (scholarships.gov.in).",
+    "deadline": "Check portal",
+    "source_url": "https://scholarships.gov.in",
+    "last_verified": "2026-10-29",
+    "status": "verified"
+  },
+  {
+    "id": "minorities-mcm",
+    "name": "Merit Cum Means Scholarship for Professional & Technical Courses (Minorities)",
+    "level": "central",
+    "state": "All",
+    "short_description": "Financial assistance for meritorious minority students pursuing graduate or post-graduate technical and professional degrees (Engineering, Medical, Law, etc.).",
+    "benefits": "Course fee reimbursement up to ₹20,000 per annum plus maintenance allowance of ₹1,000/month for hostellers and ₹500/month for day scholars.",
+    "eligibility_rules": {
+      "min_age": 17,
+      "max_age": 30,
+      "max_family_income": 250000,
+      "allowed_categories": ["Minority", "General", "OBC"],
+      "gender": "any",
+      "requires_disability": false,
+      "education_levels": ["Undergraduate", "Postgraduate"],
+      "minimum_marks_percentage": 50
+    },
+    "required_documents": [
+      "Aadhaar Card",
+      "Minority Community Certificate / Self-Declaration",
+      "Income Certificate (<= ₹2.5 Lakhs)",
+      "Mark sheet of previous qualifying exam (minimum 50%)",
+      "Competitive exam rank card / admission allotment letter",
+      "Institution fee structure and payment receipts"
+    ],
+    "how_to_apply": "Apply online through scholarships.gov.in under Ministry of Minority Affairs.",
+    "deadline": "Check portal",
+    "source_url": "https://scholarships.gov.in",
+    "last_verified": "2026-10-29",
+    "status": "verified"
+  },
+  {
+    "id": "pwd-pre-matric",
+    "name": "Pre-Matric Scholarship for Students with Disabilities",
+    "level": "central",
+    "state": "All",
+    "short_description": "Department of Empowerment of Persons with Disabilities scheme for disabled students studying in classes 9 and 10.",
+    "benefits": "Maintenance allowance of ₹700/month for day scholars and ₹1,000/month for hostellers, plus book grant of ₹1,000/year and disability allowances.",
+    "eligibility_rules": {
+      "min_age": 12,
+      "max_age": 20,
+      "max_family_income": 250000,
+      "allowed_categories": ["General", "OBC", "SC", "ST", "Minority"],
+      "gender": "any",
+      "requires_disability": true,
+      "education_levels": ["Class 9", "Class 10"],
+      "minimum_marks_percentage": 0
+    },
+    "required_documents": [
+      "Aadhaar Card",
+      "UDID Card / Disability Certificate issued by Competent Medical Authority (40% or more disability)",
+      "Parent Income Certificate (<= ₹2.5 Lakhs)",
+      "School Bonafide Certificate",
+      "Aadhaar Seeded Bank Account"
+    ],
+    "how_to_apply": "Apply through scholarships.gov.in under Department of Empowerment of Persons with Disabilities.",
+    "deadline": "Check portal",
+    "source_url": "https://scholarships.gov.in",
+    "last_verified": "2026-10-29",
+    "status": "verified"
+  },
+  {
+    "id": "pwd-post-matric",
+    "name": "Post-Matric Scholarship for Students with Disabilities",
+    "level": "central",
+    "state": "All",
+    "short_description": "Financial assistance for students with 40% or more disability pursuing higher secondary, diploma, UG, PG, or PhD degrees.",
+    "benefits": "Maintenance allowance up to ₹1,600/month, book grant of up to ₹1,500/year, and disability-specific allowances (reader allowance, escort allowance).",
+    "eligibility_rules": {
+      "min_age": 14,
+      "max_age": 35,
+      "max_family_income": 250000,
+      "allowed_categories": ["General", "OBC", "SC", "ST", "Minority"],
+      "gender": "any",
+      "requires_disability": true,
+      "education_levels": ["Class 11", "Class 12", "ITI", "Diploma", "Undergraduate", "Postgraduate", "PhD"],
+      "minimum_marks_percentage": 0
+    },
+    "required_documents": [
+      "Aadhaar Card",
+      "UDID Card or Disability Certificate (40% and above)",
+      "Income Certificate (<= ₹2.5 Lakhs per year)",
+      "Previous Qualifying Examination Certificate",
+      "Fee Receipts and Bonafide Certificate",
+      "Bank Passbook"
+    ],
+    "how_to_apply": "Apply online at scholarships.gov.in under DEPwD section.",
+    "deadline": "Check portal",
+    "source_url": "https://scholarships.gov.in",
+    "last_verified": "2026-10-29",
+    "status": "verified"
+  },
+  {
+    "id": "pwd-top-class",
+    "name": "Top Class Education Scholarship for Students with Disabilities",
+    "level": "central",
+    "state": "All",
+    "short_description": "Supports disabled students studying in recognized premier institutes of excellence (IITs, NITs, IIMs, Central Universities).",
+    "benefits": "Full tuition fee reimbursement (capped at ₹2 Lakhs per annum for private institutes, full for govt), living expenses of ₹3,000/month, and computer grant of ₹30,000.",
+    "eligibility_rules": {
+      "min_age": 17,
+      "max_age": 35,
+      "max_family_income": 800000,
+      "allowed_categories": ["General", "OBC", "SC", "ST", "Minority"],
+      "gender": "any",
+      "requires_disability": true,
+      "education_levels": ["Undergraduate", "Postgraduate"],
+      "minimum_marks_percentage": 0
+    },
+    "required_documents": [
+      "Aadhaar Card",
+      "UDID / Medical Board Disability Certificate (40% or more)",
+      "Income Certificate (Family income <= ₹8.00 Lakhs)",
+      "Proof of admission in notified Premier Institute",
+      "Fee receipt of institute"
+    ],
+    "how_to_apply": "Apply on the National Scholarship Portal under Top Class Education for PwD.",
+    "deadline": "Check portal",
+    "source_url": "https://scholarships.gov.in",
+    "last_verified": "2026-10-29",
+    "status": "verified"
+  },
+  {
+    "id": "css-college-university",
+    "name": "Central Sector Scheme of Scholarship for College and University Students",
+    "level": "central",
+    "state": "All",
+    "short_description": "Department of Higher Education scheme for top 80th percentile scorers in Class 12 pursuing regular full-time degree programs.",
+    "benefits": "₹12,000 per annum for the first three undergraduate years, and ₹20,000 per annum at the postgraduate level.",
+    "eligibility_rules": {
+      "min_age": 17,
+      "max_age": 25,
+      "max_family_income": 450000,
+      "allowed_categories": ["General", "OBC", "SC", "ST", "Minority"],
+      "gender": "any",
+      "requires_disability": false,
+      "education_levels": ["Undergraduate", "Postgraduate"],
+      "minimum_marks_percentage": 80
+    },
+    "required_documents": [
+      "Aadhaar Card",
+      "Class 12 Marksheet (Must be in top 20th percentile of respective State Board)",
+      "Income Certificate (<= ₹4.5 Lakhs)",
+      "College Admission Proof / Bonafide",
+      "Aadhaar-seeded Bank Passbook"
+    ],
+    "how_to_apply": "Submit online form on scholarships.gov.in under Department of Higher Education.",
+    "deadline": "Check portal (usually October - December)",
+    "source_url": "https://scholarships.gov.in",
+    "last_verified": "2026-10-29",
+    "status": "verified"
+  },
+  {
+    "id": "nmmss-central",
+    "name": "National Means-cum-Merit Scholarship Scheme (NMMSS)",
+    "level": "central",
+    "state": "All",
+    "short_description": "Scholarship awarded to meritorious students from economically weaker sections studying in government/aided schools from class 9 to 12.",
+    "benefits": "₹12,000 per year (₹1,000 per month) credited directly to bank account via DBT.",
+    "eligibility_rules": {
+      "min_age": 13,
+      "max_age": 18,
+      "max_family_income": 350000,
+      "allowed_categories": ["General", "OBC", "SC", "ST", "Minority"],
+      "gender": "any",
+      "requires_disability": false,
+      "education_levels": ["Class 9", "Class 10", "Class 11", "Class 12"],
+      "minimum_marks_percentage": 55
+    },
+    "required_documents": [
+      "Aadhaar Card",
+      "NMMSS Selection Examination Result / Merit Certificate",
+      "Income Certificate (<= ₹3.5 Lakhs per annum)",
+      "Class 7/8 Marksheet (minimum 55% for General/OBC, 50% for SC/ST)",
+      "School Enrollment Certificate (Govt / Local Body / Aided school)"
+    ],
+    "how_to_apply": "Selected students through state level NMMSS exam must register on scholarships.gov.in to disburse funds.",
+    "deadline": "Check portal",
+    "source_url": "https://scholarships.gov.in",
+    "last_verified": "2026-10-29",
+    "status": "verified"
+  },
+  {
+    "id": "aicte-pragati",
+    "name": "AICTE Pragati Scholarship for Girl Students",
+    "level": "central",
+    "state": "All",
+    "short_description": "AICTE scheme aimed at empowering girl students admitted to technical degree or diploma courses in AICTE-approved institutions.",
+    "benefits": "₹50,000 per annum for every year of study towards college fee payment, computer purchase, books, and equipment.",
+    "eligibility_rules": {
+      "min_age": 16,
+      "max_age": 28,
+      "max_family_income": 800000,
+      "allowed_categories": ["General", "OBC", "SC", "ST", "Minority"],
+      "gender": "female",
+      "requires_disability": false,
+      "education_levels": ["Diploma", "Undergraduate"],
+      "minimum_marks_percentage": 0
+    },
+    "required_documents": [
+      "Aadhaar Card",
+      "Admission letter for AICTE approved Technical Degree/Diploma course",
+      "Income Certificate (Family income <= ₹8.00 Lakhs)",
+      "Class 10 and 12 marksheets",
+      "Parent declaration that family has maximum 2 girl beneficiaries",
+      "Bank Account Passbook"
+    ],
+    "how_to_apply": "Apply via National Scholarship Portal (scholarships.gov.in) under AICTE schemes.",
+    "deadline": "Check portal",
+    "source_url": "https://scholarships.gov.in",
+    "last_verified": "2026-10-29",
+    "status": "verified"
+  },
+  {
+    "id": "aicte-saksham",
+    "name": "AICTE Saksham Scholarship Scheme for Differently Abled Students",
+    "level": "central",
+    "state": "All",
+    "short_description": "AICTE financial incentive encouraging specially-abled students to pursue technical education (Degree/Diploma).",
+    "benefits": "₹50,000 per year towards tuition fees, purchase of laptop, software, assistive devices, and books.",
+    "eligibility_rules": {
+      "min_age": 16,
+      "max_age": 35,
+      "max_family_income": 800000,
+      "allowed_categories": ["General", "OBC", "SC", "ST", "Minority"],
+      "gender": "any",
+      "requires_disability": true,
+      "education_levels": ["Diploma", "Undergraduate"],
+      "minimum_marks_percentage": 0
+    },
+    "required_documents": [
+      "Aadhaar Card",
+      "Disability Certificate showing minimum 40% benchmark disability",
+      "Income Certificate (<= ₹8 Lakhs)",
+      "AICTE approved institution admission proof",
+      "Tuition Fee Receipt"
+    ],
+    "how_to_apply": "Apply via National Scholarship Portal under AICTE scheme header.",
+    "deadline": "Check portal",
+    "source_url": "https://scholarships.gov.in",
+    "last_verified": "2026-10-29",
+    "status": "verified"
+  },
+  {
+    "id": "tn-pudhumai-penn",
+    "name": "Moovalur Ramamirtham Ammaiyar Higher Education Assurance Scheme (Pudhumai Penn)",
+    "level": "state",
+    "state": "Tamil Nadu",
+    "short_description": "Tamil Nadu state government flagship initiative providing ₹1,000 per month to girl students who studied classes 6 to 12 in government schools and enroll in higher education.",
+    "benefits": "₹1,000 per month (₹12,000 per year) transferred directly to the student's bank account until successful completion of UG degree, diploma, or ITI.",
+    "eligibility_rules": {
+      "min_age": 16,
+      "max_age": 28,
+      "max_family_income": null,
+      "allowed_categories": ["General", "OBC", "BC", "MBC", "SC", "ST", "Minority"],
+      "gender": "female",
+      "requires_disability": false,
+      "education_levels": ["ITI", "Diploma", "Undergraduate"],
+      "studied_in_govt_school": true,
+      "minimum_marks_percentage": 0
+    },
+    "required_documents": [
+      "Aadhaar Card",
+      "School Transfer Certificate (TC) or Study Certificate proving Class 6 to 12 study in TN Government School",
+      "EMIS (Educational Management Information System) ID",
+      "College Admission Proof / ID Card",
+      "Aadhaar-seeded Bank Passbook"
+    ],
+    "how_to_apply": "Applied through college nodal officer on penkalvi.tn.gov.in / umis.tn.gov.in portal.",
+    "deadline": "At the start of college academic year (usually July - September)",
+    "source_url": "https://penkalvi.tn.gov.in",
+    "last_verified": "2026-10-29",
+    "status": "verified"
+  },
+  {
+    "id": "tn-tamil-pudhalvan",
+    "name": "Tamil Pudhalvan Scheme",
+    "level": "state",
+    "state": "Tamil Nadu",
+    "short_description": "Tamil Nadu state scheme granting ₹1,000 monthly assistance to boy students who studied classes 6 to 12 in government or government-aided Tamil medium schools pursuing higher education.",
+    "benefits": "₹1,000 monthly allowance credited to bank account via DBT for textbooks, study materials, and college living expenses.",
+    "eligibility_rules": {
+      "min_age": 16,
+      "max_age": 28,
+      "max_family_income": null,
+      "allowed_categories": ["General", "OBC", "BC", "MBC", "SC", "ST", "Minority"],
+      "gender": "male",
+      "requires_disability": false,
+      "education_levels": ["ITI", "Diploma", "Undergraduate"],
+      "studied_in_govt_school": true,
+      "minimum_marks_percentage": 0
+    },
+    "required_documents": [
+      "Aadhaar Card",
+      "Proof of studying classes 6 to 12 in TN Govt / Aided School (Tamil medium)",
+      "EMIS ID number",
+      "Higher education admission letter / college ID",
+      "Bank Account details (Aadhaar linked)"
+    ],
+    "how_to_apply": "Facilitated by college nodal officers using student EMIS records on the UMIS portal (umis.tn.gov.in).",
+    "deadline": "At the start of college academic year (usually August - October)",
+    "source_url": "https://umis.tn.gov.in",
+    "last_verified": "2026-10-29",
+    "status": "verified"
+  },
+  {
+    "id": "tn-bc-mbc-postmatric",
+    "name": "Tamil Nadu Post-Matric Scholarship for BC / MBC / DNC Students",
+    "level": "state",
+    "state": "Tamil Nadu",
+    "short_description": "State scholarship scheme for students belonging to Backward Classes, Most Backward Classes, and Denotified Communities studying in post-matric courses in Tamil Nadu.",
+    "benefits": "Tuition fee reimbursement and special maintenance allowance up to ₹7,500/year depending on day-scholar or hosteller status.",
+    "eligibility_rules": {
+      "min_age": 15,
+      "max_age": 30,
+      "max_family_income": 250000,
+      "allowed_categories": ["BC", "MBC", "DNC", "OBC"],
+      "gender": "any",
+      "requires_disability": false,
+      "education_levels": ["Class 11", "Class 12", "ITI", "Diploma", "Undergraduate", "Postgraduate"],
+      "minimum_marks_percentage": 0
+    },
+    "required_documents": [
+      "Aadhaar Card",
+      "Community Certificate (BC / MBC / DNC) from e-Sevai / Tahsildar",
+      "Annual Income Certificate (<= ₹2.5 Lakhs)",
+      "Previous Examination Marksheet",
+      "College Admission Bonafide and Fee Receipt",
+      "Bank Account Details"
+    ],
+    "how_to_apply": "Apply through the college scholarship office or TN e-Sevai / BC-MBC Welfare department portal.",
+    "deadline": "Check institution / department circular",
+    "source_url": "https://www.bcmbcmw.tn.gov.in",
+    "last_verified": "2026-10-29",
+    "status": "verified"
+  }
+]

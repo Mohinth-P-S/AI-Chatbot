@@ -8,21 +8,21 @@ export const LANGUAGES = [
     label: 'தமிழ்',
     name: 'Tamil',
     speechCode: 'ta-IN',
-    greeting: 'வணக்கம்! நான் நேவிகோவ் (NaviGov). அரசு உதவித்தொகை, வருமானம்/சாதி சான்றிதழ்கள் மற்றும் திட்டங்கள் குறித்த உங்கள் சந்தேகங்களை என்னிடம் கேட்கலாம்!'
+    greeting: 'வணக்கம் அய்யா/அம்மா. நான் நேவிகோவ் (NaviGov) அரசு திட்ட வழிகாட்டி. அரசு உதவித்தொகை, வருமானம்/சாதி சான்றிதழ்கள் மற்றும் நலத்திட்டங்கள் குறித்து தங்களுக்கு உதவ நான் மிகுந்த மகிழ்ச்சி அடைகிறேன். தங்களின் சந்தேகங்களை தயவுசெய்து என்னிடம் கேளுங்கள்.'
   },
   {
     code: 'hi',
     label: 'हिन्दी',
     name: 'Hindi',
     speechCode: 'hi-IN',
-    greeting: 'नमस्ते! मैं नेविगोव (NaviGov) हूँ। छात्रवृत्ति, प्रमाण पत्र, पेंशन और पात्रता संबंधी अपने सभी प्रश्न मुझसे पूछें!'
+    greeting: 'सादर प्रणाम! मैं नेविगोव (NaviGov) हूँ। सरकारी छात्रवृत्ति, प्रमाण पत्र, पेंशन और योजनाओं के बारे में आपकी सहायता करने में मुझे अत्यंत प्रसन्नता होगी। कृपया अपने किसी भी प्रश्न या पात्रता संबंधी संदेह के बारे में मुझे बताएं।'
   },
   {
     code: 'en',
     label: 'English',
     name: 'English',
     speechCode: 'en-IN',
-    greeting: 'Hello! I am NaviGov (Navigate Government Schemes). Ask me any questions or doubts about government certificates, scholarships, pensions, and eligibility!'
+    greeting: 'Warm greetings! I am NaviGov, your dedicated government scheme and certificate advisor. It is my absolute pleasure to assist you. Please feel free to ask any question or clarify any doubt about scholarships, certificates, pensions, or eligibility.'
   },
 ]
 
@@ -30,7 +30,7 @@ export const TRANSLATIONS = {
   ta: {
     appName: 'நேவிகோவ் (NaviGov)',
     appSubtitle: 'அரசு திட்டங்கள், சான்றிதழ்கள் & உதவித்தொகை வழிகாட்டி',
-    welcomeHeading: 'உங்கள் மொழியைத் தேர்ந்தெடுக்கவும்',
+    welcomeHeading: 'வணக்கம்! தங்களின் மொழியைத் தேர்ந்தெடுக்கவும்',
     welcomeSubheading: 'அரசு உதவித்தொகை, சான்றிதழ்கள் மற்றும் ஓய்வூதியங்களை எளிதாக அறிந்து விண்ணப்பிக்கலாம்',
     continueBtn: 'தொடரவும்',
     accessibilityToggle: 'பார்வை குறைபாடு முறை (Accessibility)',
@@ -44,20 +44,20 @@ export const TRANSLATIONS = {
     pensions: '👴 ஓய்வூதியங்கள்',
     scanDocument: '📷 ஆவணம் ஸ்கேன்',
     talkToHuman: '📞 அதிகாரியுடன் பேச',
-    doubtChipsHeading: '💡 அடிக்கடி கேட்கப்படும் சந்தேகங்கள் (கிளிக் செய்யவும்):',
+    doubtChipsHeading: '💡 அடிக்கடி கேட்கப்படும் முக்கிய சந்தேகங்கள் (கிளிக் செய்யவும்):',
     doubtChips: [
       'வருமானச் சான்றிதழ் பெற என்ன ஆவணங்கள் தேவை? எப்படி விண்ணப்பிப்பது?',
+      'கல்லூரி மாணவிகளுக்கு மாதம் 1000 ரூபாய் தரும் புதுமைப் பெண் திட்டம் தகுதிகள் என்ன?',
+      'முதல் பட்டதாரி சான்றிதழ் (First Graduate) பெறுவது எப்படி? என்ன சலுகை கிடைக்கும்?',
+      'தமிழ்ப் புதல்வன் ₹1000 திட்டம் யாருக்கு கிடைக்கும்? தகுதிகள் என்ன?',
       'கல்லூரி மாணவர்களுக்கான அரசு உதவித்தொகைகள் என்னென்ன?',
-      'புதுமைப் பெண் ₹1000 திட்டம் யாருக்கு கிடைக்கும்? தகுதிகள் என்ன?',
-      'முதல் பட்டதாரி சான்றிதழ் (First Graduate) பெறுவது எப்படி? சலுகைகள் என்ன?',
-      'தமிழ்ப் புதல்வன் ₹1000 திட்டம் யாருக்கு கிடைக்கும்?',
       'முதியோர் ஓய்வூதியம் (OAP) பெற தகுதிகள் மற்றும் வயது வரம்பு என்ன?'
     ],
-    inputPlaceholder: 'இங்கே பேசவும் அல்லது தட்டச்சு செய்யவும்...',
+    inputPlaceholder: 'தங்களின் கேள்வியை இங்கே பேசவும் அல்லது தட்டச்சு செய்யவும்...',
     sendBtn: 'அனுப்பு',
-    micListening: 'கேட்கிறது... பேசுங்கள்',
+    micListening: 'கேட்கிறது... தயவுசெய்து பேசுங்கள்',
     micIdle: 'பேச கிளிக் செய்யவும்',
-    readAloud: '🔊 வாசிக்க',
+    readAloud: '🔊 குரலில் வாசிக்க',
     stopAudio: '⏹ நிறுத்து',
     sourcesHeading: 'அதிகாரப்பூர்வ இணைப்புகள் & சரிபார்ப்பு:',
     verifiedDate: 'சரிபார்க்கப்பட்ட தேதி:',
@@ -67,7 +67,7 @@ export const TRANSLATIONS = {
   hi: {
     appName: 'नेविगोव (NaviGov)',
     appSubtitle: 'सरकारी योजनाएं, प्रमाण पत्र एवं छात्रवृत्ति मार्गदर्शक',
-    welcomeHeading: 'अपनी भाषा चुनें',
+    welcomeHeading: 'सादर प्रणाम! अपनी भाषा चुनें',
     welcomeSubheading: 'छात्रवृत्ति, प्रमाण पत्र और पेंशन के लिए सरल आवाज-आधारित सहायता',
     continueBtn: 'आगे बढ़ें',
     accessibilityToggle: 'सुलभता मोड (Accessibility)',
@@ -81,18 +81,18 @@ export const TRANSLATIONS = {
     pensions: '👴 पेंशन योजनाएं',
     scanDocument: '📷 दस्तावेज़ स्कैन',
     talkToHuman: '📞 अधिकारी से बात करें',
-    doubtChipsHeading: '💡 अक्सर पूछे जाने वाले प्रश्न (टैप करें):',
+    doubtChipsHeading: '💡 अक्सर पूछे जाने वाले महत्वपूर्ण प्रश्न (टैप करें):',
     doubtChips: [
       'आय प्रमाण पत्र कैसे बनवाएं और क्या दस्तावेज़ चाहिए?',
-      'कॉलेज छात्रों के लिए कौन सी छात्रवृत्तियां उपलब्ध हैं?',
       'पुधुमै पेन ₹1000 योजना की पात्रता और आवेदन कैसे करें?',
       'प्रथम स्नातक (First Graduate) प्रमाण पत्र के नियम क्या हैं?',
       'तमिल पुधलवन योजना का लाभ किसे मिलेगा?',
+      'कॉलेज छात्रों के लिए कौन सी सरकारी छात्रवृत्तियां उपलब्ध हैं?',
       'वृद्धावस्था पेंशन (OAP) के नियम और पात्रता क्या है?'
     ],
-    inputPlaceholder: 'यहाँ बोलें या टाइप करें...',
+    inputPlaceholder: 'कृपया अपना प्रश्न यहाँ बोलें या टाइप करें...',
     sendBtn: 'भेजें',
-    micListening: 'सुन रहे हैं... बोलिए',
+    micListening: 'सुन रहे हैं... कृपया बोलिए',
     micIdle: 'बोलने के लिए माइक दबाएं',
     readAloud: '🔊 पढ़कर सुनाएं',
     stopAudio: '⏹ रोकें',
@@ -104,7 +104,7 @@ export const TRANSLATIONS = {
   en: {
     appName: 'NaviGov',
     appSubtitle: 'Navigate Government Schemes, Certificates & Scholarships',
-    welcomeHeading: 'Choose Your Language',
+    welcomeHeading: 'Warm Greetings! Choose Your Language',
     welcomeSubheading: 'Navigate scholarships, certificates, and welfare pensions easily by voice',
     continueBtn: 'Continue',
     accessibilityToggle: 'Accessibility Mode',
@@ -121,13 +121,13 @@ export const TRANSLATIONS = {
     doubtChipsHeading: '💡 Popular Doubts & Questions (Tap to ask):',
     doubtChips: [
       'What documents are needed for Income Certificate and how to apply?',
-      'What scholarships are available for college students in Tamil Nadu?',
       'Who is eligible for Pudhumai Penn ₹1000/month scheme?',
       'How to apply for First Graduate Certificate and what fee concession do I get?',
       'Who is eligible for Tamil Pudhalvan ₹1000 scheme?',
+      'What scholarships are available for college students in Tamil Nadu?',
       'What are the eligibility rules and age limit for Old Age Pension (OAP)?'
     ],
-    inputPlaceholder: 'Speak or type your question here...',
+    inputPlaceholder: 'Please speak or type your question here...',
     sendBtn: 'Send',
     micListening: 'Listening... please speak',
     micIdle: 'Click to speak',

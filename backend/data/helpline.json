@@ -1,0 +1,40 @@
+{
+  "general_helpline": {
+    "title": "National & State Citizen Support",
+    "cm_helpline_tn": "1100 (Toll Free - Tamil Nadu CM Helpline)",
+    "national_emergency": "112",
+    "elderline": "14567 (National Helpline for Senior Citizens)",
+    "women_helpline": "181 (Women in Distress & Welfare Assistance)",
+    "disability_helpline": "1800-11-2001 (DEPwD Toll Free Support)"
+  },
+  "scheme_helplines": [
+    {
+      "name": "National Scholarship Portal (NSP) Helpdesk",
+      "phone": "0120-6619540",
+      "email": "helpdesk@nsp.gov.in",
+      "hours": "9:00 AM to 5:30 PM (Monday to Friday)",
+      "services_covered": "All Central Sector & Centrally Sponsored Scholarships"
+    },
+    {
+      "name": "Tamil Nadu e-Sevai / TNeGA Helpdesk",
+      "phone": "1800-425-1333",
+      "alt_phone": "1100",
+      "email": "tnesevaihelpdesk@tn.gov.in",
+      "hours": "24/7 (via CM Helpline 1100)",
+      "services_covered": "Income, Community, Nativity Certificates & Social Security Pensions"
+    },
+    {
+      "name": "Tamil Nadu Social Security Schemes (Pension Wing)",
+      "phone": "044-28518880",
+      "email": "crahq@tn.nic.in",
+      "hours": "10:00 AM to 5:45 PM (Working Days)",
+      "services_covered": "Old Age Pension (OAP), Destitute Widow Pension (DWP), Differently Abled Pension"
+    },
+    {
+      "name": "Common Service Centre (CSC) Locator",
+      "url": "https://locator.csccloud.in/",
+      "toll_free": "14599",
+      "description": "Find your nearest Arasu e-Sevai Centre or CSC Village Level Entrepreneur (VLE) in your village or ward for physical assistance."
+    }
+  ]
+}

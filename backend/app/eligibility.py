@@ -12,7 +12,9 @@ from typing import Dict, Any, List, Optional
 from pydantic import BaseModel, Field
 
 # Directory containing the knowledge base JSON files
-DATA_DIR = Path(__file__).resolve().parent.parent.parent / "data"
+_backend_data = Path(__file__).resolve().parent.parent / "data"
+_root_data = Path(__file__).resolve().parent.parent.parent / "data"
+DATA_DIR = _backend_data if _backend_data.exists() else _root_data
 
 class CitizenProfile(BaseModel):
     """Normalized profile collected from conversation or guided questionnaire."""

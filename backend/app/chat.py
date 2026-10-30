@@ -136,12 +136,17 @@ CITIZEN QUESTION / DOUBT:
 TARGET RESPONSE LANGUAGE: {target_lang}
 
 CORE ADVISING GUIDELINES:
-1. DIRECT & EMPOWERING ANSWER: Start with a direct, warm, and helpful answer in {target_lang} clarifying the citizen's doubt clearly.
-2. ELIGIBILITY CLARITY: Explain clearly who is eligible (income ceiling, caste categories, age limits, school/college criteria).
-3. MANDATORY DOCUMENTS: If answering about a certificate or scheme, list the specific documents needed (e.g. Aadhaar Card, Ration Card, Salary Slip / VAO report, Marksheet, Bonafide certificate).
-4. HOW TO APPLY: Provide clear step-by-step application guidance (e.g., Apply online at TN e-Sevai / NSP portal or visit nearest Arasu e-Sevai / CSC Center). Mention the standard government service fee (e.g. ₹60) and processing time if applicable.
-5. GROUNDING: Only quote official facts from the knowledge base context. If a user asks about something completely outside government schemes, politely state you specialize in government schemes, certificates, and pensions, and recommend checking with official portals or visiting e-Sevai.
-6. PROFILE EXTRACTION: Detect any citizen attributes mentioned in the message (age, family_income [integer], gender ['male'/'female'], category ['SC'/'ST'/'OBC'/'BC'/'MBC'/'General'], education_level, studied_in_govt_school [true/false], marital_status) and output them in 'updated_profile_fields'.
+1. EXTREME POLITENESS & RESPECTFUL TONE (MANDATORY):
+   - Always address the citizen with the highest degree of respect, humility, and warmth.
+   - In Tamil: Greet with 'வணக்கம் அய்யா/அம்மா', address the user with respectful pronouns like 'தாங்கள்' / 'தங்களுக்கு' (NEVER use casual 'நீ' or 'உனக்கு'). Use courteous phrases like 'தங்களுக்கு உதவ நான் பெருமகிழ்ச்சி அடைகிறேன்' (It is my great pleasure to assist you), 'தயவுசெய்து' (please), 'நன்றி' (thank you), and conclude with 'தங்களுக்கு மேலும் ஏதேனும் சந்தேகம் இருந்தால் தயங்காமல் கேட்கலாம்' (please feel free to ask any further doubts).
+   - In Hindi: Greet with 'सादर प्रणाम / नमस्कार', address the user with highest respect 'आप' / 'आपको' (NEVER use 'तुम' or 'तू'). Use polite phrases like 'मुझे आपकी सहायता करने में अत्यंत प्रसन्नता हो रही है', 'कृपया', 'धन्यवाद', and conclude with 'यदि आपके मन में कोई अन्य प्रश्न हो तो अवश्य पूछें'.
+   - In English: Greet with warm, humble respect ('Warm greetings! It is my absolute pleasure to assist you'). Use courteous phrases ('Please note', 'Kindly visit', 'Thank you for asking, please feel free to reach out for any further clarification').
+2. DIRECT & EMPOWERING ANSWER: Clarify the citizen's doubt clearly, thoroughly, and reassuringly.
+3. ELIGIBILITY CLARITY: Explain clearly who is eligible (income ceiling, caste categories, age limits, school/college criteria).
+4. MANDATORY DOCUMENTS: If answering about a certificate or scheme, list the specific documents needed (e.g. Aadhaar Card, Ration Card, Salary Slip / VAO report, Marksheet, Bonafide certificate).
+5. HOW TO APPLY: Provide clear step-by-step application guidance (e.g., Apply online at TN e-Sevai / NSP portal or visit nearest Arasu e-Sevai / CSC Center). Mention the standard government service fee (e.g. ₹60) and processing time if applicable.
+6. GROUNDING: Only quote official facts from the knowledge base context. If a user asks about something completely outside government schemes, politely state you specialize in government schemes, certificates, and pensions, and recommend checking with official portals or visiting e-Sevai.
+7. PROFILE EXTRACTION: Detect any citizen attributes mentioned in the message (age, family_income [integer], gender ['male'/'female'], category ['SC'/'ST'/'OBC'/'BC'/'MBC'/'General'], education_level, studied_in_govt_school [true/false], marital_status) and output them in 'updated_profile_fields'.
 
 OUTPUT FORMAT:
 Respond STRICTLY with a valid JSON object matching this schema, without markdown code fences or backticks:
@@ -274,14 +279,15 @@ def generate_deterministic_fallback(req: ChatRequest, relevant_items: List[Dict[
             portal = first_item.get("source_url", "https://tnesevai.tn.gov.in")
 
             reply = (
-                f"வணக்கம்! **{name}** பற்றிய முழு விவரங்கள் இதோ:\n\n"
+                f"வணக்கம் அய்யா/அம்மா! தங்களுக்கு உதவ நான் பெருமகிழ்ச்சி அடைகிறேன். **{name}** பற்றிய முழு விவரங்கள் பணிவுடன் கீழே சமர்ப்பிக்கப்பட்டுள்ளன:\n\n"
                 f"📌 **விளக்கம்:** {desc}\n"
                 f"💰 **பயன்கள் / சலுகை:** {benefits}\n"
                 f"📄 **தேவையான முக்கிய ஆவணங்கள்:** {docs}\n"
-                f"🌐 **விண்ணப்பிக்கும் முறை:** அரசு இ-சேவை மையம் (e-Sevai) அல்லது அதிகாரப்பூர்வ இணையதளம்: {portal}"
+                f"🌐 **விண்ணப்பிக்கும் முறை:** தயவுசெய்து தங்களின் அருகிலுள்ள அரசு இ-சேவை மையம் (e-Sevai/CSC) அல்லது அதிகாரப்பூர்வ இணையதளம் மூலம் விண்ணப்பிக்கலாம்: {portal}\n\n"
+                f"தங்களுக்கு மேலும் ஏதேனும் விளக்கம் தேவைப்பட்டால் தயங்காமல் கேட்கலாம்."
             )
         else:
-            reply = "வணக்கம்! நான் நேவிகோவ் (NaviGov). அரசு உதவித்தொகை, வருமானம்/சாதி சான்றிதழ்கள் மற்றும் ஓய்வூதியங்கள் குறித்த உங்கள் சந்தேகங்களை என்னிடம் தெளிவாகக் கேட்கலாம்."
+            reply = "வணக்கம் அய்யா/அம்மா! நான் நேவிகோவ் (NaviGov) அரசு திட்ட வழிகாட்டி. அரசு உதவித்தொகை, வருமானம்/சாதி சான்றிதழ்கள் மற்றும் ஓய்வூதியங்கள் குறித்து தங்களுக்கு உதவ நான் பணிவுடன் தயாராக உள்ளேன். தங்களின் கேள்விகளை தயவுசெய்து கேட்கலாம்."
     elif lang == "hi":
         if first_item:
             name = first_item.get("name")
@@ -291,14 +297,15 @@ def generate_deterministic_fallback(req: ChatRequest, relevant_items: List[Dict[
             portal = first_item.get("source_url", "https://tnesevai.tn.gov.in")
 
             reply = (
-                f"नमस्ते! **{name}** की पूरी जानकारी:\n\n"
+                f"सादर प्रणाम! आपकी सहायता करने में मुझे अत्यंत प्रसन्नता हो रही है। **{name}** की पूरी जानकारी सादर प्रस्तुत है:\n\n"
                 f"📌 **विवरण:** {desc}\n"
                 f"💰 **लाभ:** {benefits}\n"
                 f"📄 **आवश्यक दस्तावेज़:** {docs}\n"
-                f"🌐 **आवेदन प्रक्रिया:** निकटतम ई-सेवा (e-Sevai/CSC) केंद्र या आधिकारिक पोर्टल: {portal}"
+                f"🌐 **आवेदन प्रक्रिया:** कृपया निकटतम ई-सेवा (e-Sevai/CSC) केंद्र या आधिकारिक पोर्टल पर जाएं: {portal}\n\n"
+                f"यदि आपके मन में कोई अन्य प्रश्न हो, तो कृपया बेझिझक पूछें।"
             )
         else:
-            reply = "नमस्ते! मैं नेविगोव (NaviGov) हूँ। छात्रवृत्ति, आय/जाति प्रमाण पत्र और पेंशन योजनाओं से जुड़े किसी भी प्रश्न के लिए मुझसे पूछें।"
+            reply = "सादर प्रणाम! मैं नेविगोव (NaviGov) हूँ। छात्रवृत्ति, आय/जाति प्रमाण पत्र और पेंशन योजनाओं से जुड़े किसी भी प्रश्न के समाधान के लिए मैं सदैव तत्पर हूँ। कृपया अपना प्रश्न पूछें।"
     else:
         if first_item:
             name = first_item.get("name")
@@ -308,14 +315,15 @@ def generate_deterministic_fallback(req: ChatRequest, relevant_items: List[Dict[
             portal = first_item.get("source_url", "https://tnesevai.tn.gov.in")
 
             reply = (
-                f"Hello! Here are the complete details for **{name}**:\n\n"
+                f"Warm greetings! It is my absolute pleasure to assist you. Here are the complete verified details for **{name}**:\n\n"
                 f"📌 **Overview:** {desc}\n"
                 f"💰 **Benefits:** {benefits}\n"
                 f"📄 **Required Documents:** {docs}\n"
-                f"🌐 **How to Apply:** Apply at your local e-Sevai / CSC Center or online via: {portal}"
+                f"🌐 **How to Apply:** Kindly apply at your nearest local e-Sevai / CSC Center or online via: {portal}\n\n"
+                f"Please feel free to ask if you need any further clarification or assistance."
             )
         else:
-            reply = "Hello! I am NaviGov (Navigate Government Schemes). You can ask me any question about government certificates, scholarships, pensions, and eligibility criteria!"
+            reply = "Warm greetings! I am NaviGov (Navigate Government Schemes). I would be honored to assist you with any questions or doubts about government certificates, scholarships, pensions, and eligibility criteria!"
 
     return ChatResponse(
         reply=reply,

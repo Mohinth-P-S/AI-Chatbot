@@ -1,0 +1,150 @@
+[
+  {
+    "id": "cert-income-tn",
+    "name": "Income Certificate (வருமானச் சான்றிதழ்)",
+    "level": "state",
+    "state": "Tamil Nadu",
+    "short_description": "Official Revenue Department certificate certifying the total annual income of a family from all legal sources, required for government schemes, scholarships, fee concessions, and hostel admissions.",
+    "benefits": "Valid proof of family income for 1 financial year; unlocks fee waivers, scholarships, and social welfare schemes.",
+    "eligibility_rules": {
+      "min_age": 18,
+      "max_age": null,
+      "max_family_income": null,
+      "allowed_categories": ["All"],
+      "gender": "any",
+      "requires_disability": false,
+      "residence_requirement_years": 0
+    },
+    "required_documents": [
+      "Applicant Photo",
+      "Aadhaar Card (or Voter ID / Driving License)",
+      "Smart / Digital Ration Card (Family Card)",
+      "Salary Certificate / Pay Slip (for salaried employees) or Self-Declaration of income",
+      "Land Ownership Documents (Patta / Chitta / Adangal) if agricultural income is declared",
+      "Income Tax Returns (ITR) if applicable"
+    ],
+    "how_to_apply": "Register for a Citizen Access Number (CAN) on the Tamil Nadu e-Sevai citizen portal (tnesevai.tn.gov.in) or visit any Arasu e-Sevai Centre. The Village Administrative Officer (VAO) and Revenue Inspector (RI) will verify before the Tahsildar digitally issues it (Service fee: ₹60).",
+    "deadline": "No deadline (apply as needed; processing takes 7 to 15 working days)",
+    "source_url": "https://www.tnesevai.tn.gov.in",
+    "last_verified": "2026-10-29",
+    "status": "verified"
+  },
+  {
+    "id": "cert-community-tn",
+    "name": "Community Certificate (சாதிச் சான்றிதழ்)",
+    "level": "state",
+    "state": "Tamil Nadu",
+    "short_description": "Official document certifying the social caste/community (SC, ST, BC, MBC, DNC) of a citizen, essential for school/college admissions, reservation benefits, and government recruitments.",
+    "benefits": "Permanent validity (does not expire). Enables reservation quotas in education and employment.",
+    "eligibility_rules": {
+      "min_age": 0,
+      "max_age": null,
+      "max_family_income": null,
+      "allowed_categories": ["SC", "ST", "BC", "MBC", "DNC", "OBC"],
+      "gender": "any",
+      "requires_disability": false,
+      "residence_requirement_years": 0
+    },
+    "required_documents": [
+      "Applicant Photo",
+      "Aadhaar Card of Applicant",
+      "Smart Ration Card",
+      "Community Certificate of Father, Mother, or Siblings (Crucial Proof)",
+      "School Transfer Certificate (TC) or Study Certificate showing caste/religion",
+      "Self-Declaration Form"
+    ],
+    "how_to_apply": "Apply through the Tamil Nadu e-Sevai portal (tnesevai.tn.gov.in) with your CAN number or through an Arasu e-Sevai Centre. Verification is done by the VAO/RI and digitally signed by the Zonal Deputy Tahsildar / Tahsildar.",
+    "deadline": "No deadline (issued permanently; processing time: 15 working days)",
+    "source_url": "https://www.tnesevai.tn.gov.in",
+    "last_verified": "2026-10-29",
+    "status": "verified"
+  },
+  {
+    "id": "cert-nativity-tn",
+    "name": "Nativity / Residence Certificate (இருப்பிடச் சான்றிதழ்)",
+    "level": "state",
+    "state": "Tamil Nadu",
+    "short_description": "Official certification confirming that an individual is a native or continuous resident of Tamil Nadu, compulsory for state government quotas in higher education and TNPSC recruitments.",
+    "benefits": "Proves state domicile for state quotas in MBBS, Engineering (TNEA), and government jobs.",
+    "eligibility_rules": {
+      "min_age": 0,
+      "max_age": null,
+      "max_family_income": null,
+      "allowed_categories": ["All"],
+      "gender": "any",
+      "requires_disability": false,
+      "residence_requirement_years": 5
+    },
+    "required_documents": [
+      "Applicant Photo",
+      "Aadhaar Card",
+      "Smart Ration Card",
+      "Proof of continuous residence of at least 5 years in Tamil Nadu (e.g. School TC, Mark sheets, Property tax receipt, or Rental agreement)",
+      "Birth Certificate of Applicant (if born in Tamil Nadu)",
+      "Parent's Nativity / Community / TC document"
+    ],
+    "how_to_apply": "Log in to the e-Sevai portal (tnesevai.tn.gov.in) using your CAN ID, upload proofs of continuous stay, and pay ₹60. The Tahsildar approves after VAO/RI field verification.",
+    "deadline": "No deadline (processing takes about 7 to 15 working days)",
+    "source_url": "https://www.tnesevai.tn.gov.in",
+    "last_verified": "2026-10-29",
+    "status": "verified"
+  },
+  {
+    "id": "cert-birth-crs",
+    "name": "Birth Certificate (பிறப்புச் சான்றிதழ்)",
+    "level": "central",
+    "state": "All",
+    "short_description": "The first legal identity document recording the birth of a child, issued under the Registration of Births and Deaths Act by local municipal/panchayat registrar.",
+    "benefits": "Primary proof of age and parentage for school admission, passport, Aadhaar, voter ID, and citizenship.",
+    "eligibility_rules": {
+      "min_age": 0,
+      "max_age": null,
+      "max_family_income": null,
+      "allowed_categories": ["All"],
+      "gender": "any",
+      "requires_disability": false,
+      "residence_requirement_years": 0
+    },
+    "required_documents": [
+      "Hospital Discharge Summary / Birth Report Form (Form-1) if born in a medical facility",
+      "Parents' Aadhaar Cards",
+      "Marriage Certificate / Proof of marriage of parents (if requested)",
+      "Address Proof (Smart Ration Card / Electricity Bill)",
+      "Affidavit / Revenue Divisional Officer (RDO) sanction if delayed beyond 1 year"
+    ],
+    "how_to_apply": "If born in hospital, the hospital registers it directly on crsorgi.gov.in / TN Town Panchayat or Corporation portal. For home births, report to the Village Administrative Officer / Sanitary Inspector within 21 days for free registration.",
+    "deadline": "Free within 21 days of birth; late fee applies from 21-30 days; Magistrate/RDO permission needed after 1 year",
+    "source_url": "https://crsorgi.gov.in",
+    "last_verified": "2026-10-29",
+    "status": "verified"
+  },
+  {
+    "id": "cert-death-crs",
+    "name": "Death Certificate (இறப்புச் சான்றிதழ்)",
+    "level": "central",
+    "state": "All",
+    "short_description": "Official legal document stating the date, fact, and cause of death of an individual, vital for settling property inheritance, insurance claims, bank accounts, and pensions.",
+    "benefits": "Legally settles insurance claims, bank account transfers, family pension applications, and property succession.",
+    "eligibility_rules": {
+      "min_age": 0,
+      "max_age": null,
+      "max_family_income": null,
+      "allowed_categories": ["All"],
+      "gender": "any",
+      "requires_disability": false,
+      "residence_requirement_years": 0
+    },
+    "required_documents": [
+      "Medical Cause of Death Certificate / Hospital Death Summary Form",
+      "Deceased Person's Aadhaar Card and Voter ID",
+      "Applicant / Informant Identity Proof (Aadhaar Card)",
+      "Smart Ration Card showing relation with the deceased",
+      "Cremation / Burial Ground Receipt"
+    ],
+    "how_to_apply": "Report to the local Registrar (Panchayat / Municipality / Corporation) within 21 days. Download digital copies from crsorgi.gov.in or the local municipal corporation website.",
+    "deadline": "Free registration within 21 days of occurrence",
+    "source_url": "https://crsorgi.gov.in",
+    "last_verified": "2026-10-29",
+    "status": "verified"
+  }
+]

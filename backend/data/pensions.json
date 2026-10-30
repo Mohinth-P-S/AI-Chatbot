@@ -1,0 +1,130 @@
+[
+  {
+    "id": "pension-oap-tn",
+    "name": "Indira Gandhi National Old Age Pension Scheme / TN Old Age Pension (OAP)",
+    "level": "state",
+    "state": "Tamil Nadu",
+    "short_description": "Social security welfare pension provided by the Government of Tamil Nadu and Central NSAP to impoverished senior citizens who have no regular source of financial support.",
+    "benefits": "₹1,200 per month credited directly to the beneficiary's Aadhaar-seeded bank account via DBT, plus 2 sets of free dhotis/sarees annually during Pongal/Deepavali, and free rice scheme benefits.",
+    "eligibility_rules": {
+      "min_age": 60,
+      "max_age": null,
+      "max_family_income": 100000,
+      "allowed_categories": ["All"],
+      "gender": "any",
+      "requires_disability": false,
+      "destitute_status_required": true,
+      "has_adult_earning_son": false
+    },
+    "required_documents": [
+      "Aadhaar Card",
+      "Smart Ration Card (BPL proof / PHH card)",
+      "Age Proof (Voter ID / Birth Certificate / Transfer Certificate or Medical Officer Age Certificate)",
+      "Bank Account Passbook (Aadhaar linked)",
+      "Passport Size Photographs",
+      "VAO Destitute Certificate (confirming applicant has no adequate financial support)"
+    ],
+    "how_to_apply": "Submit application online via the Tamil Nadu e-Sevai citizen portal (tnesevai.tn.gov.in) under Revenue Department services (REV-401) or visit your nearest Arasu e-Sevai / Taluk Office. Field verification is conducted by the VAO and Special Tahsildar (Social Security Schemes).",
+    "deadline": "Applications accepted round the year",
+    "source_url": "https://www.tnesevai.tn.gov.in",
+    "last_verified": "2026-10-29",
+    "status": "verified"
+  },
+  {
+    "id": "pension-dwp-tn",
+    "name": "Destitute Widow Pension Scheme (DWP / IGNWPS)",
+    "level": "state",
+    "state": "Tamil Nadu",
+    "short_description": "Financial assistance scheme to rehabilitate destitute widows who have no adequate means of livelihood or support from adult family members.",
+    "benefits": "₹1,200 per month via Direct Benefit Transfer (DBT) directly into bank account, plus free clothing and subsidized/free rice.",
+    "eligibility_rules": {
+      "min_age": 18,
+      "max_age": null,
+      "max_family_income": 100000,
+      "allowed_categories": ["All"],
+      "gender": "female",
+      "requires_disability": false,
+      "destitute_status_required": true,
+      "marital_status": "widow",
+      "has_adult_earning_son": false
+    },
+    "required_documents": [
+      "Aadhaar Card of the Widow",
+      "Husband's Death Certificate",
+      "Smart Ration Card",
+      "Destitute Widow Certificate issued by Tahsildar / Revenue Divisional Officer (RDO)",
+      "Age Proof document",
+      "Bank Account Passbook (Aadhaar Seeded)",
+      "Passport-size photo"
+    ],
+    "how_to_apply": "Apply through Arasu e-Sevai centre or online at tnesevai.tn.gov.in (Service Code REV-402). The application is reviewed by the Revenue Inspector and sanctioned by the Special Tahsildar (SSS).",
+    "deadline": "Open throughout the year",
+    "source_url": "https://www.tnesevai.tn.gov.in",
+    "last_verified": "2026-10-29",
+    "status": "verified"
+  },
+  {
+    "id": "pension-dap-tn",
+    "name": "Differently Abled Welfare Pension Scheme (DAP / IGNDPS)",
+    "level": "state",
+    "state": "Tamil Nadu",
+    "short_description": "Enhanced monthly subsistence pension for persons with disabilities (benchmark disability 40% and above) to support living expenses and medical care.",
+    "benefits": "₹1,500 per month (recently enhanced by the Tamil Nadu Government from ₹1,000) transferred directly to the beneficiary's bank account.",
+    "eligibility_rules": {
+      "min_age": 18,
+      "max_age": null,
+      "max_family_income": 150000,
+      "allowed_categories": ["All"],
+      "gender": "any",
+      "requires_disability": true,
+      "minimum_disability_percentage": 40,
+      "destitute_status_required": false
+    },
+    "required_documents": [
+      "Aadhaar Card",
+      "National Disability Identity Card (UDID) or Medical Board Disability Certificate (40% or more)",
+      "Smart Ration Card",
+      "Age Proof (Voter ID, School TC, or Birth Certificate)",
+      "Aadhaar-seeded Bank Passbook",
+      "Recent Passport Size Photograph"
+    ],
+    "how_to_apply": "Apply through Arasu e-Sevai centres, online via tnesevai.tn.gov.in, or submit directly to the District Differently Abled Welfare Officer (DDAWO) / Taluk Tahsildar.",
+    "deadline": "Open round the year",
+    "source_url": "https://www.tnesevai.tn.gov.in",
+    "last_verified": "2026-10-29",
+    "status": "verified"
+  },
+  {
+    "id": "pension-ddwps-tn",
+    "name": "Destitute Deserted Wives Pension Scheme (DDWPS)",
+    "level": "state",
+    "state": "Tamil Nadu",
+    "short_description": "Monthly welfare grant provided to women who have been legally divorced or deserted by their husbands for 5 years or more and have no financial support.",
+    "benefits": "₹1,200 per month paid through DBT directly to bank account, along with free clothings during festive seasons and free rice distribution.",
+    "eligibility_rules": {
+      "min_age": 30,
+      "max_age": null,
+      "max_family_income": 100000,
+      "allowed_categories": ["All"],
+      "gender": "female",
+      "requires_disability": false,
+      "destitute_status_required": true,
+      "desertion_period_years": 5,
+      "has_adult_earning_son": false
+    },
+    "required_documents": [
+      "Aadhaar Card",
+      "Deserted Wife Certificate issued by Tahsildar / Legal Court Divorce Decree",
+      "Smart Ration Card",
+      "Age Proof document (Voter ID or Birth Certificate)",
+      "Proof showing separation / desertion for more than 5 years (affidavit / VAO report)",
+      "Bank Account Passbook (Aadhaar linked)",
+      "Passport photo"
+    ],
+    "how_to_apply": "Apply online at tnesevai.tn.gov.in or visit the local Arasu e-Sevai / Taluk Office. Field verification is conducted by the VAO and Social Security Scheme officers.",
+    "deadline": "Open throughout the year",
+    "source_url": "https://www.tnesevai.tn.gov.in",
+    "last_verified": "2026-10-29",
+    "status": "verified"
+  }
+]
